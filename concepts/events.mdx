@@ -1,5 +1,5 @@
 ---
-title: "Understanding Events in TinyTrack"
+title: "How TinyTrack Events Work: Types, Properties, Limits"
 sidebarTitle: "Events"
 description: "Events are the core unit of measurement in TinyTrack. Learn how pageviews, custom events, payment events, and AI visits are tracked and counted."
 ---
@@ -27,10 +27,6 @@ In TinyTrack, an **event** is any recorded interaction between a visitor and you
 
 Every event — regardless of type — counts as **one event** toward your monthly plan total. Pageviews, custom events, payment events, and AI visits all increment the same counter.
 
-<Tip>
-  Each pageview counts as one event toward your monthly plan total.
-</Tip>
-
 Within the dashboard, TinyTrack distinguishes between **total** and **unique** counts:
 
 - **Total** — the raw number of times an event was recorded in the selected time window.
@@ -48,9 +44,9 @@ Every event can carry an optional set of **custom properties** — arbitrary key
 
 ```javascript
 // Track a sign-up with plan and source properties
-tinytrack("sign_up", {
-  plan: "pro",
-  source: "homepage_cta",
+tinytrack('event', 'sign_up', {
+  plan: 'pro',
+  source: 'homepage_cta',
   trial: true
 });
 ```

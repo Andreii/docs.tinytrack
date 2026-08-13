@@ -1,5 +1,5 @@
 ---
-title: "Install the TinyTrack Tracking Script"
+title: "Install the TinyTrack Tracking Script on Your Site"
 sidebarTitle: "Script Installation"
 description: "Add the 1 KB TinyTrack script to your website's HTML head to start tracking pageviews and events. Works with any framework or static site."
 ---
@@ -12,7 +12,7 @@ Paste the following snippet inside the `<head>` element of every page you want t
 
 ```html
 <script defer
-  data-site="YOUR_SITE_DOMAIN"
+  data-site="YOUR_DOMAIN"
   src="https://cdn.tinytrack.io/t.js"></script>
 ```
 
@@ -48,7 +48,7 @@ export default function RootLayout({
         {children}
         <Script
           defer
-          data-site="YOUR_SITE_DOMAIN"
+          data-site="YOUR_DOMAIN"
           src="https://cdn.tinytrack.io/t.js"
           strategy="afterInteractive"
         />
@@ -62,7 +62,7 @@ export default function RootLayout({
 // Option 1 — add directly to public/index.html
 // <head>
 //   <script defer
-//     data-site="YOUR_SITE_DOMAIN"
+//     data-site="YOUR_DOMAIN"
 //     src="https://cdn.tinytrack.io/t.js"></script>
 // </head>
 
@@ -73,7 +73,7 @@ export default function App() {
   useEffect(() => {
     const script = document.createElement('script')
     script.defer = true
-    script.dataset.site = 'YOUR_SITE_DOMAIN'
+    script.dataset.site = 'YOUR_DOMAIN'
     script.src = 'https://cdn.tinytrack.io/t.js'
     document.head.appendChild(script)
   }, [])
@@ -88,7 +88,7 @@ export default function App() {
 // Alternatively, use a header/footer plugin such as "Insert Headers and Footers".
 ?>
 <script defer
-  data-site="YOUR_SITE_DOMAIN"
+  data-site="YOUR_DOMAIN"
   src="https://cdn.tinytrack.io/t.js"></script>
 </head>
 ```
@@ -96,7 +96,7 @@ export default function App() {
 ```html HTML / Static Sites
 <!-- Paste just before the closing </head> tag on every page -->
 <script defer
-  data-site="YOUR_SITE_DOMAIN"
+  data-site="YOUR_DOMAIN"
   src="https://cdn.tinytrack.io/t.js"></script>
 </head>
 ```
@@ -119,7 +119,7 @@ After adding the snippet, confirm it is firing correctly in three steps:
   </Step>
 </Steps>
 
-You can also open your browser's **Network** tab and filter for `t.js` to confirm the script loads with a `200` status code, and watch for a `POST` request to `cdn.tinytrack.io` when the pageview fires.
+You can also open your browser's **Network** tab and filter for `t.js` to confirm the script loads with a `200` status code, and watch for a request to `cdn.tinytrack.io` when the pageview fires.
 
 <Warning>
   Do not add the script to localhost without setting `data-site` to your actual domain, or events will be attributed incorrectly. Use your production domain as the `data-site` value at all times, even during local development.

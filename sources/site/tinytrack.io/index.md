@@ -92,7 +92,7 @@ GDPR · CCPA · PECRCompliant
 
 ## One line. That’s the whole setup.
 
-Drop the snippet in your <head> and start tracking.
+Drop the snippet in your `<head>` and start tracking.
 
 index.html Copy
 

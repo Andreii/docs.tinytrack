@@ -1,5 +1,5 @@
 ---
-title: "Automatic Pageview Tracking with TinyTrack"
+title: "Automatic Pageview Tracking: How TinyTrack Counts Visits"
 sidebarTitle: "Pageviews"
 description: "TinyTrack automatically records a pageview event for every page load. Learn how pageviews are counted, deduplicated, and displayed in your dashboard."
 ---
@@ -10,7 +10,7 @@ Once you install the TinyTrack script, pageview tracking works out of the box �
 
 TinyTrack fires a pageview event at two moments:
 
-1. **On every full page load** — the script executes after the page has parsed (thanks to the `defer` attribute) and immediately sends a pageview to TinyTrack's ingest endpoint.
+1. **On every full page load** — the script executes after the page has parsed (thanks to the `defer` attribute) and immediately sends a pageview to TinyTrack.
 2. **On client-side route changes** — for single-page applications (React, Vue, Angular, Next.js, SvelteKit, and others), TinyTrack listens to the browser's History API and fires an additional pageview each time the URL changes without a full reload.
 
 Each pageview record includes:

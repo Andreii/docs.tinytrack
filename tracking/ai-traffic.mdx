@@ -1,5 +1,5 @@
 ---
-title: "Detect and Track AI Provider Traffic"
+title: "Detect and Analyze AI Provider Traffic with TinyTrack"
 sidebarTitle: "AI Traffic"
 description: "TinyTrack automatically detects visits from AI providers like crawlers and LLM agents, separating them from real human traffic in your dashboard."
 ---
@@ -21,7 +21,7 @@ TinyTrack maintains a continuously updated list of known AI provider User-Agent 
 | **LLM retrieval agents** | Agents making programmatic HTTP requests on behalf of a language model |
 | **AI SEO and audit tools** | AI-assisted content scrapers and automated site analyzers |
 
-When TinyTrack's ingest pipeline receives a request with a recognized AI User-Agent, it tags the visit as `ai` before recording it. These visits are stored separately from human traffic and never mixed into your standard pageview or unique visitor counts.
+When TinyTrack receives a request with a recognized AI User-Agent, it tags the visit as `ai` before recording it. These visits are stored separately from human traffic and never mixed into your standard pageview or unique visitor counts.
 
 ## Where to See AI Traffic
 

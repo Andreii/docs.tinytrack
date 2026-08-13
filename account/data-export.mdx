@@ -1,7 +1,7 @@
 ---
-title: "Export Your TinyTrack Analytics Data"
+title: "How to Export Your TinyTrack Analytics Data to CSV"
 sidebarTitle: "Data Export"
-description: "Download your TinyTrack pageview and event data as a CSV file at any time. Your data is always yours — exportable and portable."
+description: "Download your TinyTrack analytics as a CSV from the dashboard, or automate exports with the Pro API. Your data is always yours to keep and take with you."
 ---
 
 TinyTrack lets you export your analytics data at any time in **CSV format**. You own your data — it is never sold, never shared, and always available for you to download and take with you. Whether you want to build a custom report in a spreadsheet, load data into a BI tool, or just keep a local backup, exporting takes a few clicks.
@@ -11,6 +11,8 @@ TinyTrack lets you export your analytics data at any time in **CSV format**. You
 </Note>
 
 ## Exporting via the Dashboard
+
+Downloading a CSV takes less than a minute directly from your site dashboard. Use the date picker to scope the export to any time range, then grab the file in a single click — no email link, no waiting in a queue.
 
 <Steps>
   <Step title="Open your site dashboard">
@@ -48,13 +50,13 @@ Bot traffic is filtered out before export, so the numbers in your CSV match exac
   For automated exports or dashboards, use the TinyTrack API available on the Pro plan.
 </Tip>
 
-If you are on the **Pro plan**, use the TinyTrack API to pull data programmatically — no manual downloads required. The [`/api/stats`](/api-reference/stats) endpoint returns the same metrics available in the dashboard as JSON, scoped to any site and date range you specify.
+If you are on the **Pro plan**, use the TinyTrack API to pull data programmatically — no manual downloads required. The [`GET /v1/stats`](/api-reference/stats) endpoint returns the same metrics available in the dashboard as JSON, scoped to any site and date range you specify.
 
 A basic request looks like this:
 
 ```bash
 curl -H "Authorization: Bearer YOUR_API_KEY" \
-  "https://tinytrack.io/api/stats?site=your-site.com&period=30d"
+  "https://tinytrack.io/v1/stats?site=your-site.com&period=30d"
 ```
 
 Replace `YOUR_API_KEY` with the key from **Settings → API** and `your-site.com` with your tracked domain. See the [Stats API reference](/api-reference/stats) for the full list of parameters, filters, and response fields.
