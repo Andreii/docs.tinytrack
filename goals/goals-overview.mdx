@@ -1,0 +1,118 @@
+---
+title: "Set Up Goals to Track Conversions in TinyTrack"
+sidebarTitle: "Goals"
+description: "Goals let you measure how often visitors complete specific actions — sign-ups, purchases, downloads — and see your conversion rate directly in the TinyTrack dashboard."
+---
+
+Raw pageview and event counts tell you *what* happened on your site, but goals tell you *whether it mattered*. A goal wraps a specific action — a visitor reaching your `/thank-you` page, a user completing a sign-up flow, a download button click — and surfaces that action as a named conversion metric right in your TinyTrack dashboard. Instead of hunting through event logs, you see a clean conversion count and conversion rate for every goal you care about.
+
+## What is a goal?
+
+A goal is a named target that TinyTrack watches for on your site. Every time the target condition is met by a unique visitor session, TinyTrack records a conversion for that goal and updates your conversion rate automatically.
+
+Each goal is tied to one of two trigger types:
+
+- **Page visit** — TinyTrack converts when a visitor lands on a specific URL path, such as `/thank-you` or `/signup/confirmed`.
+- **Custom event** — TinyTrack converts when your site calls `tinytrack('event', 'your-event-name')`, such as `tinytrack('event', 'signup')` or `tinytrack('event', 'purchase')`.
+
+Goals are site-specific. A goal you create for `shop.acme.dev` has no effect on any other site in your account.
+
+## Creating a goal
+
+<Steps>
+  <Step title="Open your site dashboard">
+    Log in to [TinyTrack](https://tinytrack.io/signin) and click the site you want to track conversions for. The dashboard opens on the **Overview** tab.
+  </Step>
+  <Step title="Go to Goals">
+    Click **Goals** in the left-hand navigation. If you haven't created any goals yet, you'll see an empty state with a prompt to add your first one.
+  </Step>
+  <Step title="Click Add goal">
+    Click the **Add goal** button in the top-right corner of the Goals screen. A creation panel slides open.
+  </Step>
+  <Step title="Choose a goal type">
+    Select the trigger type that matches the action you want to track:
+
+    - **Page visit** — enter the URL path visitors must reach, for example `/thank-you`. TinyTrack matches the path exactly, so include any trailing slashes your site uses.
+    - **Custom event** — enter the event name you fire in your tracking code, for example `signup` or `purchase`. The name must match the string you pass as the second argument to `tinytrack('event', ...)` exactly, including capitalisation.
+
+    ```js
+    // Example: fire a custom event when a form is submitted
+    document.querySelector('#signup-form').addEventListener('submit', () => {
+      tinytrack('event', 'signup');
+    });
+    ```
+  </Step>
+  <Step title="Name the goal">
+    Give the goal a human-readable label that will appear in your dashboard, for example **New sign-up**, **Checkout complete**, or **PDF downloaded**. Choose a name that makes the metric immediately clear to anyone who views the dashboard.
+  </Step>
+  <Step title="Save">
+    Click **Save goal**. TinyTrack starts recording conversions for the new goal from this moment forward. The goal appears immediately in your Goals table.
+  </Step>
+</Steps>
+
+## Goal types in detail
+
+### Page visit goal
+
+A page visit goal converts when a visitor's session includes a pageview matching the URL path you specify. Use this type when your conversion is a page load — for example, a post-purchase confirmation page or an email-verified landing page.
+
+| Setting | Example value | Notes |
+|---|---|---|
+| Path | `/thank-you` | Must start with `/`. Query strings are ignored. |
+| Path | `/signup/confirmed` | Nested paths are supported. |
+
+TinyTrack matches the path component of the URL only. It ignores query parameters (`?ref=email`) and fragments (`#section`), so `example.com/thank-you?ref=email` and `example.com/thank-you` both trigger a goal set to `/thank-you`.
+
+### Custom event goal
+
+A custom event goal converts when your site explicitly calls the TinyTrack event API. Use this type when the conversion isn't a page load — for example, a button click, a form submission, or a video completion.
+
+Fire the event anywhere in your JavaScript:
+
+```js
+// Button click
+document.querySelector('#download-btn').addEventListener('click', () => {
+  tinytrack('event', 'download');
+});
+
+// After a successful async payment
+async function handlePayment() {
+  const result = await processPayment();
+  if (result.success) {
+    tinytrack('event', 'purchase');
+  }
+}
+```
+
+The TinyTrack script must be loaded on the page before you call `tinytrack('event', ...)`. If the script hasn't initialised yet, queue the call inside a `window.tinytrack` check or use the `defer` attribute on the script tag as shown in the [installation guide](/tracking/script-installation).
+
+<Warning>
+  Custom event goal names are **case-sensitive**. A goal named `signup` will not match an event fired as `tinytrack('event', 'Signup')`. Make sure your event names are consistent across your codebase.
+</Warning>
+
+## Viewing goal performance
+
+After you save a goal, TinyTrack begins counting conversions in real time. To view goal performance:
+
+1. Open your site dashboard and click **Goals** in the left navigation.
+2. Each goal row shows:
+   - **Conversions** — the total number of times the goal was triggered in the selected time period.
+   - **Conversion rate** — the percentage of unique visitors in the same period who triggered the goal at least once.
+3. Use the date range picker at the top of the dashboard to filter goal data by day, week, month, or a custom range.
+4. Click a goal name to drill into its detail view, where you can see conversions over time plotted on a chart alongside your overall visitor trend.
+
+All goal metrics respect the same filters you apply to the rest of the dashboard — source, page, country, device, and browser. Filter by traffic source to see which acquisition channels drive the most conversions.
+
+## Editing and deleting goals
+
+To edit an existing goal, open **Goals**, click the **⋯** menu on the goal row, and select **Edit**. You can rename the goal or change its URL path or event name. Changes take effect immediately — TinyTrack uses the new configuration for all conversions going forward.
+
+To delete a goal, click **⋯** → **Delete** and confirm. Deleting a goal removes it from your dashboard permanently. Historical conversion data for that goal is also removed and cannot be recovered.
+
+<Warning>
+  Deleting a goal is irreversible. If you only want to pause tracking, consider renaming the goal with a `[paused]` prefix rather than deleting it.
+</Warning>
+
+<Tip>
+  You can create as many goals as you need. They don't affect your event count.
+</Tip>

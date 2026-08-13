@@ -1,0 +1,126 @@
+---
+title: "Install the TinyTrack Tracking Script"
+sidebarTitle: "Script Installation"
+description: "Add the 1 KB TinyTrack script to your website's HTML head to start tracking pageviews and events. Works with any framework or static site."
+---
+
+The TinyTrack tracking script is a single async tag that weighs under 1 KB — small enough that it will never affect your page speed or Lighthouse score. Drop it once into your site's `<head>` and TinyTrack immediately begins recording pageviews, unique visitors, and any custom events you choose to instrument.
+
+## Basic Installation
+
+Paste the following snippet inside the `<head>` element of every page you want to track:
+
+```html
+<script defer
+  data-site="YOUR_SITE_DOMAIN"
+  src="https://cdn.tinytrack.io/t.js"></script>
+```
+
+**Attribute breakdown:**
+
+| Attribute | Purpose |
+|---|---|
+| `data-site` | Your site's domain (e.g. `blog.acme.dev`). TinyTrack uses this to attribute events to the correct property in your dashboard. |
+| `defer` | Tells the browser to load the script after HTML parsing completes — non-blocking, zero render-delay impact. |
+| `src` | Points to the TinyTrack CDN. The script is served from the edge and cached aggressively. |
+
+<Note>
+  Find your exact snippet — with the correct `data-site` value pre-filled — in the TinyTrack dashboard under your site's **Settings**.
+</Note>
+
+## Framework-Specific Examples
+
+<CodeGroup>
+
+```tsx Next.js (App Router)
+// app/layout.tsx
+import Script from 'next/script'
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  return (
+    <html lang="en">
+      <head />
+      <body>
+        {children}
+        <Script
+          defer
+          data-site="YOUR_SITE_DOMAIN"
+          src="https://cdn.tinytrack.io/t.js"
+          strategy="afterInteractive"
+        />
+      </body>
+    </html>
+  )
+}
+```
+
+```jsx React / SPA
+// Option 1 — add directly to public/index.html
+// <head>
+//   <script defer
+//     data-site="YOUR_SITE_DOMAIN"
+//     src="https://cdn.tinytrack.io/t.js"></script>
+// </head>
+
+// Option 2 — load from your root component with useEffect
+import { useEffect } from 'react'
+
+export default function App() {
+  useEffect(() => {
+    const script = document.createElement('script')
+    script.defer = true
+    script.dataset.site = 'YOUR_SITE_DOMAIN'
+    script.src = 'https://cdn.tinytrack.io/t.js'
+    document.head.appendChild(script)
+  }, [])
+
+  return <>{/* your app */}</>
+}
+```
+
+```php WordPress
+<?php
+// Paste inside your theme's header.php, just before the closing </head> tag.
+// Alternatively, use a header/footer plugin such as "Insert Headers and Footers".
+?>
+<script defer
+  data-site="YOUR_SITE_DOMAIN"
+  src="https://cdn.tinytrack.io/t.js"></script>
+</head>
+```
+
+```html HTML / Static Sites
+<!-- Paste just before the closing </head> tag on every page -->
+<script defer
+  data-site="YOUR_SITE_DOMAIN"
+  src="https://cdn.tinytrack.io/t.js"></script>
+</head>
+```
+
+</CodeGroup>
+
+## Verifying Installation
+
+After adding the snippet, confirm it is firing correctly in three steps:
+
+<Steps>
+  <Step title="Open your TinyTrack dashboard">
+    Log in at [tinytrack.io](https://tinytrack.io) and navigate to the property that matches your `data-site` value.
+  </Step>
+  <Step title="Visit your live site">
+    Open your website in a browser tab. Load at least one page — TinyTrack fires a pageview event on every full page load.
+  </Step>
+  <Step title="Check the live count">
+    Return to the dashboard. The **Live** counter in the top bar updates in real time — you should see your visit appear within a few seconds. If the real-time counter increments, your script is installed correctly.
+  </Step>
+</Steps>
+
+You can also open your browser's **Network** tab and filter for `t.js` to confirm the script loads with a `200` status code, and watch for a `POST` request to `cdn.tinytrack.io` when the pageview fires.
+
+<Warning>
+  Do not add the script to localhost without setting `data-site` to your actual domain, or events will be attributed incorrectly. Use your production domain as the `data-site` value at all times, even during local development.
+</Warning>

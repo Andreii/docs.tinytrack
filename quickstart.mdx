@@ -1,47 +1,77 @@
 ---
-title: "Quickstart"
-description: "Begin with a guide on the fastest path to a successful outcome"
+title: "Get Started with TinyTrack in 5 Minutes"
+sidebarTitle: "Quickstart"
+description: "Learn how to install TinyTrack on your website and start seeing real-time analytics in under five minutes — no credit card required."
 ---
 
-Describe how someone begins using your product. What is the first thing they need to do? Are there any prerequisites?
+By the end of this guide you'll have the TinyTrack tracking script installed on your website, your dashboard showing live visitor data, and an optional goal configured to measure your most important conversion event. The whole process takes under five minutes and requires no backend changes or credit card.
 
-A quickstart should take someone from zero to using your product. They'll get a quick win and a sense of what they can accomplish.
+<Note>
+  TinyTrack sets no cookies and requires no consent banner. You're compliant with GDPR, CCPA, and PECR the moment you install the script.
+</Note>
 
-## Prerequisites
-
-Before you begin, you must have:
-
-- Requirement one (for example, Node.js 18+, a free account, an API key)
-- Requirement two (for example, a compatible device, a compatible browser, a compatible operating system)
-
-## Get started
+## Steps
 
 <Steps>
-  <Step title="Install">
-    Describe how to install your product or sign up.
+  <Step title="Sign up for a free trial">
+    Go to [tinytrack.io/signup](https://tinytrack.io/signup) and create your account. Choose one of two options:
 
-    ```bash
-    npm install your-package
-    ```
+    - **Sign up with Google** — click the Google OAuth button for one-click account creation.
+    - **Email and password** — enter your email address and choose a password, then click **Sign up**.
+
+    Your 14-day free trial starts immediately. No credit card is required at this stage.
   </Step>
-  <Step title="Configure">
-    Describe any setup or configuration needed before first use.
 
-    ```bash
-    your-cli init
+  <Step title="Add your site">
+    After signing in, click **Add site** in the dashboard. Enter the domain you want to track — for example:
+
     ```
+    blog.acme.dev
+    ```
+
+    TinyTrack accepts bare domains and subdomains. Do not include `https://` or a trailing slash. Click **Save** to generate your unique tracking snippet.
   </Step>
-  <Step title="Run it">
-    Show the first thing a user does to see it working.
 
-    ```bash
-    your-cli start
+  <Step title="Install the tracking script">
+    Copy the snippet TinyTrack provides and paste it inside the `<head>` element of every page you want to track. Replace `YOUR_SITE` with the domain you entered in the previous step.
+
+    ```html
+    <!-- Add inside <head> -->
+    <script defer data-site="YOUR_SITE" src="https://cdn.tinytrack.io/t.js"></script>
     ```
+
+    **Platform-specific tips:**
+    - **Next.js / React** — add the tag to your root `_document.js`, `layout.tsx`, or equivalent layout file so it loads on every route.
+    - **WordPress** — paste it into your theme's `header.php` file, just before the closing `</head>` tag, or use a header/footer plugin.
+    - **Static sites** — add it directly to your HTML template's `<head>` section.
+
+    The script is asynchronous (`defer`) and only 1 KB, so it won't block page rendering or affect your performance scores.
+  </Step>
+
+  <Step title="Verify tracking is working">
+    Open your TinyTrack dashboard, then open your website in a separate browser tab and navigate to any page. Watch the **Live visitors** counter in the dashboard — you should see it tick up within a few seconds confirming the script is firing correctly.
+
+    If the counter doesn't update after 30 seconds, double-check that:
+    - The `data-site` attribute matches the domain you entered exactly.
+    - The script tag is inside `<head>`, not just before `</body>`.
+    - Your browser isn't blocking third-party scripts (try an incognito window without extensions).
+  </Step>
+
+  <Step title="Set up a goal (optional)">
+    Goals let you measure specific conversions — sign-ups, purchases, button clicks, or any custom event. Once basic tracking is confirmed, follow the [Goals overview](/goals/goals-overview) guide to configure your first conversion goal and start tracking what matters most to your product.
   </Step>
 </Steps>
 
-<Tip>
-  Give people a way to get help. This could be a link to a support page, a chat with a customer support agent, or a forum for your product.
+## Next steps
 
-  Example: Need help? Reach out to us at [support@yourcompany.com](mailto:support@yourcompany.com).
-</Tip>
+<CardGroup cols={3}>
+  <Card title="Custom Events" icon="code" href="/tracking/custom-events">
+    Fire custom events from your JavaScript to track button clicks, form submissions, and any other user interaction beyond pageviews.
+  </Card>
+  <Card title="Goals & Funnels" icon="flag-checkered" href="/goals/goals-overview">
+    Define conversion goals and build multi-step funnels to see exactly where visitors drop off before completing an action.
+  </Card>
+  <Card title="Shareable Dashboards" icon="share-nodes" href="/sharing/shareable-dashboards">
+    Generate a public read-only dashboard link to share live analytics with your team, investors, or clients.
+  </Card>
+</CardGroup>

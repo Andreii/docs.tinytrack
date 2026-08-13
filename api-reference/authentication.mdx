@@ -1,0 +1,153 @@
+---
+title: "Authenticate TinyTrack API Requests with API Keys"
+sidebarTitle: "Authentication"
+description: "Generate an API key in your TinyTrack dashboard and pass it as a Bearer token in the Authorization header on every API request."
+---
+
+Every call to the TinyTrack API must include your API key in the `Authorization` header. There are no cookies, sessions, or OAuth flows — a single long-lived key is all you need. Keep it secret, keep it safe, and include it on every request.
+
+---
+
+## Generating an API Key
+
+<Steps>
+  <Step title="Sign in to TinyTrack">
+    Go to [tinytrack.io/signin](https://tinytrack.io/signin) and log in to your account. You must be on the **Pro plan** to access the API.
+  </Step>
+  <Step title="Go to Settings → API">
+    Click your account avatar in the top-right corner and select **Settings**, then navigate to the **API** tab.
+  </Step>
+  <Step title="Click Generate API Key">
+    Press the **Generate API key** button. TinyTrack generates a new key immediately and displays it on screen.
+  </Step>
+  <Step title="Copy and store the key securely">
+    Copy the key right now — it will **not** be shown again once you navigate away. Store it in a password manager or secrets vault before closing the page.
+  </Step>
+</Steps>
+
+Your API key takes the form `tt_live_xxxxxxxxxxxx`. Keys prefixed with `tt_test_` are reserved for future sandbox environments.
+
+---
+
+## Using Your API Key in Requests
+
+Pass your API key as a Bearer token in the `Authorization` header. The examples below retrieve your list of tracked sites.
+
+<CodeGroup>
+  ```bash cURL
+  curl https://api.tinytrack.io/v1/sites \
+    -H "Authorization: Bearer tt_live_xxxxxxxxxxxx"
+  ```
+
+  ```js JavaScript (fetch)
+  const res = await fetch('https://api.tinytrack.io/v1/sites', {
+    headers: {
+      'Authorization': 'Bearer tt_live_xxxxxxxxxxxx'
+    }
+  });
+
+  const data = await res.json();
+  console.log(data);
+  ```
+</CodeGroup>
+
+Replace `tt_live_xxxxxxxxxxxx` with your actual API key. Never hard-code keys directly into source files — see the [API Key Security](#api-key-security) section below.
+
+---
+
+## API Key Security
+
+Your API key grants full read access to all analytics data in your account. Treat it with the same care you would a password.
+
+**Use environment variables**, not hard-coded strings:
+
+```bash Shell
+export TINYTRACK_API_KEY="tt_live_xxxxxxxxxxxx"
+```
+
+Then reference the variable in your code:
+
+<CodeGroup>
+  ```js JavaScript
+  const res = await fetch('https://api.tinytrack.io/v1/sites', {
+    headers: {
+      'Authorization': `Bearer ${process.env.TINYTRACK_API_KEY}`
+    }
+  });
+  ```
+
+  ```python Python
+  import os, requests
+
+  headers = {"Authorization": f"Bearer {os.environ['TINYTRACK_API_KEY']}"}
+  res = requests.get("https://api.tinytrack.io/v1/sites", headers=headers)
+  ```
+</CodeGroup>
+
+**Additional best practices:**
+
+- Add `.env` to your `.gitignore` and never commit secrets files to version control.
+- Use your CI/CD platform's built-in secrets store (GitHub Actions Secrets, Vercel Environment Variables, etc.) rather than committing keys in configuration files.
+- Rotate your key immediately if you suspect it has been exposed (see [Rotating Your API Key](#rotating-your-api-key) below).
+
+<Warning>
+  Your API key grants full read access to your account data. Treat it like a password — never commit it to source control or share it publicly.
+</Warning>
+
+---
+
+## Authentication Errors
+
+If authentication fails, the API returns one of these two status codes:
+
+| Status | Error code      | Meaning                                                                 |
+| ------ | --------------- | ----------------------------------------------------------------------- |
+| `401`  | `unauthorized`  | The `Authorization` header is missing, malformed, or contains an invalid key. |
+| `403`  | `forbidden`     | Your key is valid, but your account is on the Starter plan and does not include API access. |
+
+A `401` response looks like this:
+
+```json
+{
+  "error": "unauthorized",
+  "message": "Invalid or missing API key",
+  "status": 401
+}
+```
+
+A `403` response looks like this:
+
+```json
+{
+  "error": "forbidden",
+  "message": "API access is not available on your current plan. Upgrade to Pro at tinytrack.io/settings/billing.",
+  "status": 403
+}
+```
+
+If you receive a `403`, [upgrade your plan](https://tinytrack.io/settings/billing) to Pro to unlock API access.
+
+---
+
+## Rotating Your API Key
+
+If you need to issue a new key — for example, after a suspected exposure — generate a replacement from **Settings → API** at any time.
+
+<Steps>
+  <Step title="Go to Settings → API">
+    Navigate to the **API** tab in your TinyTrack dashboard settings.
+  </Step>
+  <Step title="Generate a new key">
+    Click **Generate API key**. TinyTrack creates a new key and displays it immediately.
+  </Step>
+  <Step title="Update your integrations">
+    Replace the old key with the new one in all of your services, environment variables, and secrets stores before proceeding.
+  </Step>
+  <Step title="Revoke confirmed">
+    As soon as you generate the new key, the previous key is **immediately and permanently revoked**. Any in-flight requests using the old key will return `401`.
+  </Step>
+</Steps>
+
+<Tip>
+  Update all of your integrations with the new key **before** clicking away from the generation page, since the key is only displayed once.
+</Tip>

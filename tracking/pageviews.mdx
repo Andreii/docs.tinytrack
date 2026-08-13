@@ -1,0 +1,74 @@
+---
+title: "Automatic Pageview Tracking with TinyTrack"
+sidebarTitle: "Pageviews"
+description: "TinyTrack automatically records a pageview event for every page load. Learn how pageviews are counted, deduplicated, and displayed in your dashboard."
+---
+
+Once you install the TinyTrack script, pageview tracking works out of the box — no extra code, no configuration, no event listeners to wire up. Every time a visitor loads a page on your site, TinyTrack records a pageview event and updates your dashboard in real time. For single-page applications, navigation between routes is detected and recorded automatically too.
+
+## How Pageview Tracking Works
+
+TinyTrack fires a pageview event at two moments:
+
+1. **On every full page load** — the script executes after the page has parsed (thanks to the `defer` attribute) and immediately sends a pageview to TinyTrack's ingest endpoint.
+2. **On client-side route changes** — for single-page applications (React, Vue, Angular, Next.js, SvelteKit, and others), TinyTrack listens to the browser's History API and fires an additional pageview each time the URL changes without a full reload.
+
+Each pageview record includes:
+
+| Field | Description |
+|---|---|
+| Page URL | The full path of the visited page (query strings stripped by default) |
+| Referrer | Where the visitor came from (search engine, social network, direct, etc.) |
+| Device type | Desktop, mobile, or tablet — derived from the User-Agent string |
+| Country | Inferred from the visitor's IP address; the raw IP is never stored |
+| Timestamp | When the pageview occurred, to the second |
+
+## What Counts as a Unique Visitor
+
+TinyTrack identifies unique visitors without cookies and without storing any personal data. Here is how it works:
+
+- When a visitor loads a page, TinyTrack derives a **salted daily visitor ID** from a combination of the visitor's IP address and User-Agent string.
+- The salt is unique to your site domain **and** to the current calendar day, so the same identifier cannot be used to track anyone across sites or across days.
+- The raw IP address is never persisted — only the hashed, salted identifier is used, and it is discarded at the end of the day.
+- If the same person visits your site three times on the same day, TinyTrack records three pageviews but **one unique visitor**.
+- If that same person returns the next day, they are counted as a new unique visitor for that day.
+
+This approach means you get accurate visitor counts with no consent banner, no GDPR risk, and no cookies set — ever.
+
+## Bot Filtering
+
+TinyTrack automatically strips known crawler and scraper traffic before it reaches your dashboard numbers. This includes:
+
+- Search engine crawlers (Googlebot, Bingbot, and others)
+- SEO audit tools and site scanners
+- Uptime monitoring services
+- Headless browsers used in automated pipelines
+- AI training and browsing agents (see [AI Traffic](/tracking/ai-traffic) for details)
+
+Filtered bot requests are dropped silently — they do not inflate your pageview totals, your unique visitor count, or your monthly event quota.
+
+<Tip>
+  TinyTrack automatically filters bot traffic. You don't need to configure any exclusions.
+</Tip>
+
+## Single-Page Application (SPA) Support
+
+Client-side routing frameworks update the browser URL using the History API (`pushState` / `replaceState`) without triggering a full page reload. TinyTrack handles this automatically:
+
+1. On initial load, TinyTrack fires a standard pageview for the entry URL.
+2. TinyTrack patches the browser's `history.pushState` and `history.replaceState` methods to intercept route changes.
+3. Every time your SPA navigates to a new route, TinyTrack fires a new pageview event for that URL.
+
+No additional setup is required. This behavior is active by default for all sites. If you are using a framework with hash-based routing (`/#/path`), TinyTrack also listens to the `hashchange` event to capture those transitions.
+
+## Pageview Data in the Dashboard
+
+All pageview data is available in real time on your TinyTrack dashboard:
+
+- **Views** — the total number of pageview events recorded in the selected date range, visible as the primary metric at the top of the dashboard.
+- **Unique visitors** — the count of distinct daily visitor IDs, displayed alongside total views.
+- **Trend chart** — a time-series graph of views and uniques over the selected period (day, week, month, or custom range).
+- **Top pages** — a ranked list of your most-visited URLs, showing views and uniques per page.
+- **Referrers** — a breakdown of traffic sources showing which channels are driving visits.
+
+Select any date range using the picker in the top-right corner of the dashboard. All charts and tables update instantly — there is no sampling and no data delay.

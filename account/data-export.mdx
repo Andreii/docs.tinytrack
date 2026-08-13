@@ -1,0 +1,72 @@
+---
+title: "Export Your TinyTrack Analytics Data"
+sidebarTitle: "Data Export"
+description: "Download your TinyTrack pageview and event data as a CSV file at any time. Your data is always yours — exportable and portable."
+---
+
+TinyTrack lets you export your analytics data at any time in **CSV format**. You own your data — it is never sold, never shared, and always available for you to download and take with you. Whether you want to build a custom report in a spreadsheet, load data into a BI tool, or just keep a local backup, exporting takes a few clicks.
+
+<Note>
+  Your analytics data is never sold or shared. Exporting is always free.
+</Note>
+
+## Exporting via the Dashboard
+
+<Steps>
+  <Step title="Open your site dashboard">
+    Log in to TinyTrack and click the site you want to export data for. The dashboard opens showing your default date range.
+  </Step>
+  <Step title="Set the date range you want to export">
+    Use the date picker in the top-right corner to select the start and end dates for your export. You can choose a preset range (last 7 days, last 30 days, this month) or set a custom range.
+  </Step>
+  <Step title="Click Export → Download CSV">
+    Click the **Export** button in the toolbar, then select **Download CSV**. Your browser downloads the file immediately — no email, no waiting.
+  </Step>
+  <Step title="Open in your tool of choice">
+    Open the CSV in Excel, Google Sheets, Numbers, or import it directly into your data pipeline or BI tool. The file uses standard comma-separated formatting with a header row.
+  </Step>
+</Steps>
+
+## What's Included in the Export
+
+Each CSV export covers the date range you selected and includes the following columns:
+
+| Column | Description |
+|--------|-------------|
+| **Date** | Calendar date (YYYY-MM-DD) |
+| **Pageviews** | Total pageviews recorded for that date |
+| **Unique visitors** | Distinct visitors counted for that date |
+| **Top pages** | Most-visited pages and their individual view counts |
+| **Referrers** | Traffic sources and the visit counts attributed to each |
+| **Custom event counts** | The number of times each named custom event was fired |
+
+Bot traffic is filtered out before export, so the numbers in your CSV match exactly what you see in the dashboard.
+
+## Exporting via API
+
+<Tip>
+  For automated exports or dashboards, use the TinyTrack API available on the Pro plan.
+</Tip>
+
+If you are on the **Pro plan**, use the TinyTrack API to pull data programmatically — no manual downloads required. The [`/api/stats`](/api-reference/stats) endpoint returns the same metrics available in the dashboard as JSON, scoped to any site and date range you specify.
+
+A basic request looks like this:
+
+```bash
+curl -H "Authorization: Bearer YOUR_API_KEY" \
+  "https://tinytrack.io/api/stats?site=your-site.com&period=30d"
+```
+
+Replace `YOUR_API_KEY` with the key from **Settings → API** and `your-site.com` with your tracked domain. See the [Stats API reference](/api-reference/stats) for the full list of parameters, filters, and response fields.
+
+Use the API to:
+
+- Schedule nightly exports into your data warehouse
+- Build internal dashboards that pull live TinyTrack metrics
+- Combine TinyTrack data with revenue or CRM data in a notebook or script
+
+## Data Retention
+
+TinyTrack retains your historical analytics data for the **lifetime of your account**. You can export data from your very first tracked event all the way through to today, regardless of how long ago you signed up.
+
+If you cancel your subscription, your data remains accessible and exportable until the end of your current paid billing period. Resubscribing at any time restores full access to your complete historical dataset.

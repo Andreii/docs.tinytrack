@@ -1,0 +1,63 @@
+---
+title: "Privacy by Default: How TinyTrack Handles Visitor Data"
+sidebarTitle: "Privacy"
+description: "TinyTrack counts visitors without storing personal data. No cookies, no fingerprinting, no consent banner — built for GDPR, CCPA, and PECR compliance."
+---
+
+Most analytics platforms follow your visitors across the web, building profiles and stashing cookies in pursuit of "richer data." TinyTrack takes the opposite approach: it counts what happened on your site and forgets who did it. You get accurate, actionable numbers without collecting a single byte of personal information — and your visitors get genuine privacy, not a checkbox.
+
+## No cookies, ever
+
+TinyTrack never writes a cookie to your visitors' browsers — not a first-party one, not a third-party one. Not even a session cookie for analytics purposes.
+
+Instead of persisting an identifier across visits, TinyTrack generates a short-lived visitor ID by hashing a combination of non-personal signals (such as a truncated IP address and a random server-side salt). That hash is:
+
+- **Salted per site** — the same visitor on two different TinyTrack-instrumented sites produces two completely different hashes that cannot be linked to each other.
+- **Salted per day** — the hash rotates at midnight UTC, so a returning visitor the next day looks like a brand-new visitor to the system.
+- **Discarded after aggregation** — once the count is recorded, the intermediate hash is thrown away. There is no log, no table, and no file that stores it.
+
+The result is a visitor count you can trust, with no persistent identifier you need to worry about.
+
+## No consent banner needed
+
+Because TinyTrack stores no personal data and sets no cookies, the legal triggers that require a consent banner under GDPR, CCPA, and PECR simply do not fire.
+
+- **GDPR (EU/UK):** Consent banners are required when you process personal data or use non-essential cookies. TinyTrack does neither.
+- **CCPA (California):** Opt-out requirements apply to the sale or sharing of personal information. TinyTrack has no personal information to sell or share.
+- **PECR (UK):** Cookie consent rules apply to cookies or similar tracking technologies. TinyTrack uses none.
+
+You can deploy TinyTrack and collect analytics on day one — no legal review, no cookie policy update, no banner UX to design and A/B test.
+
+<Note>
+  No personal data leaves the browser. Visitor IDs are salted per site, per day, then discarded.
+</Note>
+
+## What TinyTrack does and doesn't store
+
+| Attribute | TinyTrack |
+|---|---|
+| Cookies set | 0 |
+| Personal data stored | None |
+| Consent banner | Not required |
+| Data ownership | 100% yours |
+| GDPR / CCPA / PECR | Compliant |
+
+TinyTrack records events (pageviews, custom events, payment events) and the metadata attached to them: page path, referrer, UTM parameters, country (derived from IP, never stored), device type, and browser family. Raw IP addresses are never written to disk.
+
+## Bot filtering
+
+Raw traffic numbers lie if crawlers are mixed in with real humans. TinyTrack automatically identifies and strips requests from known bots, scrapers, and automated agents before they reach your dashboard.
+
+The filtering layer checks against a continuously updated list of known bot user-agent strings and applies behavioral heuristics to catch headless browsers and synthetic traffic that mimics human patterns. The result: every session, pageview, and conversion you see in the dashboard represents a real person taking a real action.
+
+This matters most for goal and funnel accuracy. If a crawler triggers a purchase confirmation page, it should not inflate your conversion rate — and with TinyTrack, it won't.
+
+## Your data stays yours
+
+Your analytics data belongs to you, full stop. TinyTrack will never:
+
+- Sell your data to advertisers or data brokers
+- Share aggregate or individual records with third parties for targeting
+- Use your visitors' behavior to build profiles used outside your account
+
+You can export your full event history at any time from the dashboard or via the API. If you close your account, your data is deleted. There is no lock-in and no hidden retention.

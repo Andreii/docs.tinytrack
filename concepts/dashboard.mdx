@@ -1,0 +1,101 @@
+---
+title: "Navigating the TinyTrack Dashboard"
+sidebarTitle: "Dashboard"
+description: "The TinyTrack dashboard shows real-time visitors, total pageviews, traffic sources, top pages, goals, and funnel performance — all on one screen."
+---
+
+The TinyTrack dashboard puts every metric that matters on a single screen — no separate reports to run, no drilldown menus to navigate, and no waiting for data to refresh. From the moment you open it you can see how many people are on your site right now, where they came from, which pages they visited, and whether they completed the actions you care about. The whole picture, without the noise.
+
+<Info>
+  The dashboard updates in real time — no need to refresh.
+</Info>
+
+## Dashboard overview
+
+The top of the dashboard shows your three most-watched numbers for the selected time window:
+
+| Metric | What it means |
+|---|---|
+| **Total views** | Every pageview recorded in the period, including repeat visits from the same visitor. |
+| **Unique visitors** | De-duplicated count of individual visitors, based on TinyTrack's privacy-preserving daily IDs. |
+| **Live count** | Visitors active on your site right now — updated every few seconds without a page reload. |
+
+These numbers update continuously as new events arrive. Use the live count to gauge the immediate impact of a launch, a social post, or a marketing send the moment it goes out.
+
+## Visitor trend chart
+
+Below the key metrics sits the visitor trend chart — a time-series view of your traffic across the selected period. Each bar or point on the chart represents one time bucket (hour, day, or week, depending on your date range).
+
+To change what the chart displays:
+
+<Steps>
+  <Step title="Select a date range">
+    Use the date-range picker in the top-right corner to choose a preset window or define a custom range. The chart redraws immediately.
+  </Step>
+  <Step title="Hover for detail">
+    Hover over any point on the chart to see exact pageview and unique-visitor counts for that time bucket in a tooltip.
+  </Step>
+  <Step title="Click a traffic source or page">
+    When you filter by a referrer or a specific page (see the sections below), the trend chart updates to reflect only that filtered traffic — so you can visualise the growth of a single channel or piece of content over time.
+  </Step>
+</Steps>
+
+## Traffic sources
+
+The **Sources** panel breaks down where your visitors came from:
+
+- **Referrers** — external sites that linked to you. Click any referrer to filter the entire dashboard to traffic arriving from that domain.
+- **UTM parameters** — if your campaigns include `utm_source`, `utm_medium`, `utm_campaign`, `utm_content`, or `utm_term` parameters, TinyTrack parses them automatically and surfaces them as filterable dimensions.
+- **Direct traffic** — visits with no referrer signal, typically from typed URLs, bookmarks, or link previews in messaging apps.
+
+<Tip>
+  Tag all outbound campaign links with UTM parameters so you can attribute conversions to specific campaigns without relying on third-party ad-platform data.
+</Tip>
+
+The sources panel shows each entry's share of total traffic alongside its absolute visitor count, making it easy to spot your highest-leverage acquisition channels at a glance.
+
+## Top pages
+
+The **Pages** panel lists the paths on your site ordered by pageview volume for the selected period. Use it to answer questions like:
+
+- Which blog posts are driving the most organic traffic right now?
+- Is the new landing page getting traction?
+- Which product pages have the highest engagement?
+
+Click any path in the list to instantly filter the entire dashboard — trend chart, sources, and goals — to show only traffic that touched that page. Click the path again, or click **Clear filter**, to return to the full-site view.
+
+<Note>
+  Page paths are recorded exactly as they appear in the browser URL, including query strings if you configure TinyTrack to capture them. Strip any query strings that contain sensitive or personal data before they reach TinyTrack.
+</Note>
+
+## Goals & funnels panel
+
+The **Goals** panel gives you a quick read on your most important conversion events:
+
+- Each goal shows its **total completions** and **conversion rate** for the selected period.
+- Funnel goals display a step-by-step breakdown so you can immediately see where visitors drop off.
+- Click any goal name to open the detailed goal view with a historical trend and property breakdowns.
+
+Set up goals from **Settings → Goals**. You can track any custom event you are already sending — no extra instrumentation required.
+
+<Warning>
+  Conversion rates in the Goals panel are calculated against the unique visitors recorded in the same date window. Changing the date range will recalculate all conversion rates — a goal that looks low in a 7-day window may look stronger over 30 days if your campaign has a longer consideration cycle.
+</Warning>
+
+For a full walkthrough of creating goals and building funnels, see the [Goals & Funnels](/concepts/goals) documentation.
+
+## Switching date ranges
+
+TinyTrack gives you several preset windows and a fully custom range picker:
+
+| Preset | Coverage |
+|---|---|
+| Today | Midnight UTC to now |
+| Yesterday | Full previous calendar day |
+| Last 7 days | Rolling 7-day window ending now |
+| Last 30 days | Rolling 30-day window ending now |
+| Custom range | Any start and end date you choose |
+
+Select a range from the picker in the top-right corner of the dashboard. The chart, all panels, and all conversion rates update simultaneously — there is no separate "apply" button to press.
+
+All date ranges use UTC midnight as the day boundary. If your audience is concentrated in a specific timezone, keep this in mind when comparing "today" figures against your own internal reporting.

@@ -1,0 +1,61 @@
+---
+title: "Set Up and Manage Your TinyTrack Account"
+sidebarTitle: "Account Setup"
+description: "Create your TinyTrack account, add websites to track, manage team access, and configure your profile and notification preferences."
+---
+
+This page walks you through everything involved in managing your TinyTrack account: creating it, adding one or more websites, switching between sites in the dashboard, updating your profile settings, and deleting a site when you no longer need it. Whether you're just getting started or managing an established analytics setup, you'll find all the account-level controls explained here.
+
+## Creating your account
+
+Navigate to [tinytrack.io/signup](https://tinytrack.io/signup) to create your TinyTrack account. You have two sign-up methods:
+
+- **Google OAuth** — click **Sign up with Google** to authenticate with your Google account in one step. No separate password is needed, and your email address is pulled in automatically.
+- **Email and password** — enter your email address and choose a strong password, then click **Sign up**. You'll use these credentials every time you sign in at [tinytrack.io/signin](https://tinytrack.io/signin).
+
+Both methods start your **14-day free trial** immediately with no credit card required. You can add a payment method at any time from your account settings before the trial ends.
+
+## Adding a website
+
+After signing in, add the first site you want to track:
+
+1. Click **Add site** in the dashboard sidebar or on the welcome screen.
+2. Enter your site's domain — for example, `blog.acme.dev`. Do not include `https://` or a trailing slash.
+3. Click **Save**. TinyTrack generates a unique tracking snippet for that domain.
+4. Copy the snippet and paste it inside the `<head>` element of your site:
+
+```html
+<!-- Add inside <head> -->
+<script defer data-site="YOUR_SITE" src="https://cdn.tinytrack.io/t.js"></script>
+```
+
+If you ever need to retrieve the snippet again, open the site's **Settings** tab inside the dashboard — the full script tag is always available there under **Tracking code**.
+
+<Tip>
+  You can track as many sites as you want under one account. Repeat the steps above for each additional domain you want to monitor.
+</Tip>
+
+## Managing multiple sites
+
+When you have more than one site added to your account, switch between them using the **site selector** in the dashboard sidebar. Click the name of the currently active site to open a dropdown listing all your tracked domains, then select the one you want to view.
+
+Each site has its own isolated dataset — pageviews, goals, and funnel data are never mixed across domains. The site selector is available on every page of the dashboard, so you can jump between sites without losing your place in the current report view.
+
+## Account settings
+
+Access all account-level preferences by clicking your avatar or email address in the top-right corner of the dashboard and selecting **Settings**. From the Settings page you can:
+
+- **Update your email address** — enter a new address and save. You'll use the updated email on your next sign-in.
+- **Change your password** — enter your current password, then choose and confirm a new one. This option is only available if you signed up with email and password rather than Google OAuth.
+- **Notification preferences** — toggle email notifications for usage alerts (for example, when you're approaching your monthly event limit) and product announcements. Adjust the frequency or disable notifications entirely to suit your workflow.
+- **Billing and plan** — view your current plan, event usage for the billing period, and upgrade or downgrade between Starter and Pro. You can also add or update a payment method and download past invoices here.
+
+## Deleting a site
+
+To remove a site from your account, open that site's **Settings** tab in the dashboard and scroll to the **Danger zone** section. Click **Delete site** and confirm when prompted.
+
+<Warning>
+  Deleting a site permanently removes all historical analytics data for that domain — pageviews, visitor counts, goal completions, and funnel data. This action cannot be undone. Export any data you want to keep before proceeding.
+</Warning>
+
+Deleting a site does not cancel your TinyTrack subscription. If you want to close your account entirely, contact support from the Settings page.

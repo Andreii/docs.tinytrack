@@ -1,0 +1,137 @@
+---
+title: "Stats API: Query Pageview and Visitor Analytics"
+sidebarTitle: "Stats"
+description: "GET /v1/stats returns aggregated pageviews, unique visitors, and top pages for a given site and date range. Available on the Pro plan."
+---
+
+The Stats endpoint is the primary way to pull your analytics data out of TinyTrack programmatically. Use it to fetch aggregated pageview counts, unique visitor numbers, and top-performing pages for any site in your account over a flexible date range. All data is pre-aggregated — TinyTrack never exposes raw visitor-level data, keeping you GDPR and CCPA clean by design.
+
+---
+
+## Get Site Stats
+
+Retrieve aggregated analytics for a specific site.
+
+**`GET /v1/stats`**
+
+### Query Parameters
+
+<ParamField query="site_id" type="string" required>
+  The unique ID of the site to query. Get this value from [GET /v1/sites](/api-reference/sites).
+</ParamField>
+
+<ParamField query="period" type="string" default="30d">
+  The time period to aggregate data over. Accepted values:
+
+  | Value    | Description                                               |
+  | -------- | --------------------------------------------------------- |
+  | `today`  | From midnight today (UTC) through the current moment      |
+  | `7d`     | The last 7 full days                                      |
+  | `30d`    | The last 30 full days *(default)*                         |
+  | `custom` | A custom range defined by `date_from` and `date_to`       |
+</ParamField>
+
+<ParamField query="date_from" type="string">
+  The start of a custom date range in `YYYY-MM-DD` format (e.g. `2024-02-01`). Required when `period=custom`.
+</ParamField>
+
+<ParamField query="date_to" type="string">
+  The end of a custom date range in `YYYY-MM-DD` format (e.g. `2024-02-28`). Required when `period=custom`. Must be greater than or equal to `date_from`.
+</ParamField>
+
+<ParamField query="metric" type="string" default="both">
+  The metric(s) to return. Accepted values:
+
+  | Value        | Description                                          |
+  | ------------ | ---------------------------------------------------- |
+  | `pageviews`  | Total pageview count only                            |
+  | `visitors`   | Unique visitor count only                            |
+  | `both`       | Both pageviews and unique visitors *(default)*       |
+</ParamField>
+
+### Example Requests
+
+<CodeGroup>
+  ```bash Last 7 days
+  curl "https://api.tinytrack.io/v1/stats?site_id=site_abc123&period=7d" \
+    -H "Authorization: Bearer tt_live_xxxxxxxxxxxx"
+  ```
+
+  ```bash Custom date range
+  curl "https://api.tinytrack.io/v1/stats?site_id=site_abc123&period=custom&date_from=2024-02-01&date_to=2024-02-28" \
+    -H "Authorization: Bearer tt_live_xxxxxxxxxxxx"
+  ```
+
+  ```bash Pageviews only
+  curl "https://api.tinytrack.io/v1/stats?site_id=site_abc123&period=30d&metric=pageviews" \
+    -H "Authorization: Bearer tt_live_xxxxxxxxxxxx"
+  ```
+
+  ```js JavaScript (fetch)
+  const params = new URLSearchParams({
+    site_id: 'site_abc123',
+    period: '7d'
+  });
+
+  const res = await fetch(`https://api.tinytrack.io/v1/stats?${params}`, {
+    headers: {
+      'Authorization': `Bearer ${process.env.TINYTRACK_API_KEY}`
+    }
+  });
+
+  const { data } = await res.json();
+  console.log(`${data.pageviews} pageviews, ${data.unique_visitors} visitors`);
+  ```
+</CodeGroup>
+
+### Example Response
+
+```json
+{
+  "data": {
+    "pageviews": 12483,
+    "unique_visitors": 4201,
+    "top_pages": [
+      { "path": "/blog/intro", "views": 3100 },
+      { "path": "/pricing", "views": 1800 }
+    ],
+    "date_from": "2024-02-01",
+    "date_to": "2024-02-07"
+  }
+}
+```
+
+### Response Fields
+
+<ResponseField name="pageviews" type="integer">
+  The total number of pageviews recorded in the requested period. Omitted when `metric=visitors`.
+</ResponseField>
+
+<ResponseField name="unique_visitors" type="integer">
+  The number of unique visitors counted in the requested period. TinyTrack counts visitors using a daily-salted, cookieless fingerprint — no personal data is stored or returned. Omitted when `metric=pageviews`.
+</ResponseField>
+
+<ResponseField name="top_pages" type="array">
+  An ordered array of the most-viewed pages in the requested period, from highest to lowest view count. Each entry in the array contains:
+
+  - `path` (string) — the URL path (e.g. `/blog/intro`)
+  - `views` (integer) — the pageview count for that path in the period
+</ResponseField>
+
+<ResponseField name="date_from" type="string">
+  The start of the period actually used for the query, in `YYYY-MM-DD` format. Useful for confirming the resolved range when you used a named period like `7d`.
+</ResponseField>
+
+<ResponseField name="date_to" type="string">
+  The end of the period actually used for the query, in `YYYY-MM-DD` format.
+</ResponseField>
+
+---
+
+## Notes on Data Accuracy
+
+TinyTrack filters bot and crawler traffic automatically before data reaches the Stats API, so pageview and visitor numbers reflect real human sessions. Because TinyTrack is cookieless, unique visitor counts use per-site, per-day salted identifiers — visitors are never tracked across sites or across days, keeping your analytics fully compliant with GDPR, CCPA, and PECR.
+
+<Tip>
+  To build a dashboard or reporting tool on top of this endpoint, cache responses on your side for at least 60 seconds. Analytics data updates in real time, but polling faster than that provides no additional resolution and counts against your rate limit.
+</Tip>

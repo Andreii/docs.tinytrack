@@ -1,0 +1,63 @@
+---
+title: "Detect and Track AI Provider Traffic"
+sidebarTitle: "AI Traffic"
+description: "TinyTrack automatically detects visits from AI providers like crawlers and LLM agents, separating them from real human traffic in your dashboard."
+---
+
+AI providers — from search engines building retrieval-augmented indexes to large language models with live browsing capabilities — are visiting websites at an accelerating rate. Some crawl for training data; others fetch pages in real time to answer user queries. Without visibility into this traffic, it silently inflates your pageview counts and muddies your conversion data. TinyTrack automatically identifies and labels AI-originated visits so your human visitor metrics stay clean and you always know which AI systems are accessing your content.
+
+<Info>
+  Automatic AI detection is included in all plans. No configuration required.
+</Info>
+
+## What AI Traffic Detection Covers
+
+TinyTrack maintains a continuously updated list of known AI provider User-Agent signatures. Detection covers:
+
+| Category | Examples |
+|---|---|
+| **Training crawlers** | GPTBot (OpenAI), ClaudeBot (Anthropic), Google-Extended, Common Crawl |
+| **AI-powered browsers** | ChatGPT Browse, Bing AI, Perplexity AI browser agent |
+| **LLM retrieval agents** | Agents making programmatic HTTP requests on behalf of a language model |
+| **AI SEO and audit tools** | AI-assisted content scrapers and automated site analyzers |
+
+When TinyTrack's ingest pipeline receives a request with a recognized AI User-Agent, it tags the visit as `ai` before recording it. These visits are stored separately from human traffic and never mixed into your standard pageview or unique visitor counts.
+
+## Where to See AI Traffic
+
+Open your TinyTrack dashboard and navigate to the **Traffic Sources** section. Alongside the standard referrer breakdown (organic search, direct, social, email), you will find an **AI** row that shows:
+
+- **Total AI visits** — the number of requests identified as AI-originated in the selected date range.
+- **Breakdown by provider** — which AI agents visited most frequently (e.g. GPTBot vs. ClaudeBot vs. Perplexity).
+- **Trend over time** — a chart showing how AI traffic to your site is growing or changing.
+- **Pages accessed** — which of your pages AI providers are fetching most often.
+
+Use the date picker to compare AI traffic across time periods and spot when new crawlers start indexing your site.
+
+## Why This Matters
+
+Separating AI traffic from human traffic gives you two important benefits:
+
+**Accurate human metrics.** Your pageviews, unique visitor counts, and conversion rates reflect real people who can become customers. Bot-inflated numbers lead to bad decisions — artificially low bounce rates, misleading funnel conversions, and overestimated ad ROI.
+
+**Content and indexing intelligence.** Knowing which AI providers are crawling your site — and which pages they target — tells you where your content is being used for model training or live retrieval. If you publish content under a specific license or want to block certain crawlers, this data tells you exactly who to address in your `robots.txt`.
+
+## Flagging AI Visits Yourself (Optional)
+
+If you build features that interact with AI agents — for example, a public API that LLMs call, or a page specifically designed for AI summarization — you can fire a manual event to capture additional context beyond what automatic detection provides:
+
+```js
+tinytrack('event', 'ai-visit', { provider: 'gpt-bot' });
+```
+
+You can extend this with any properties relevant to your use case:
+
+```js
+tinytrack('event', 'ai-visit', {
+  provider: 'perplexity',
+  page_type: 'product-description',
+  content_version: '2024-Q4'
+})
+```
+
+Manual AI events appear in your **Goals & Events** section alongside all other custom events, and you can filter them, build funnels, and track them over time just like any other event. This is entirely optional — automatic detection handles the vast majority of AI traffic without any code on your part.

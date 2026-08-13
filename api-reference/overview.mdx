@@ -1,0 +1,123 @@
+---
+title: "TinyTrack REST API: Programmatic Analytics Access"
+sidebarTitle: "Overview"
+description: "The TinyTrack REST API lets Pro users query pageview stats, list sites, and ingest custom events programmatically over HTTPS with JSON responses."
+---
+
+The TinyTrack REST API gives you programmatic access to your analytics data — list your tracked sites, pull aggregated pageview and visitor stats, and send custom events from your own backend. The API is available exclusively on the **Pro plan** and communicates exclusively over HTTPS, returning JSON for every request and response.
+
+**Base URL**
+
+```
+https://api.tinytrack.io/v1
+```
+
+All endpoints described in this documentation are relative to this base URL.
+
+---
+
+## Authentication
+
+Every request to the TinyTrack API must include your API key in the `Authorization` header as a Bearer token:
+
+```
+Authorization: Bearer <YOUR_API_KEY>
+```
+
+Generate your API key from **Settings → API** in your TinyTrack dashboard. For full details on generating, using, and rotating keys, see the [Authentication](/api-reference/authentication) page.
+
+---
+
+## Request Format
+
+The API accepts requests over **HTTPS only** — plain HTTP requests are rejected. When a request requires a body (for example, `POST /v1/events`), send it as JSON and include the `Content-Type: application/json` header:
+
+```http
+Content-Type: application/json
+```
+
+Query-parameter-based requests (such as `GET /v1/stats`) do not require a request body.
+
+---
+
+## Response Format
+
+All successful responses return a JSON object with a `data` key containing the requested resource and an optional `meta` key with pagination details:
+
+```json
+{
+  "data": { ... },
+  "meta": { "page": 1, "per_page": 50 }
+}
+```
+
+List endpoints paginate results using `page` and `per_page` in `meta`. Date ranges, totals, and other resource-specific metadata appear alongside `page` inside `meta` where relevant.
+
+---
+
+## Error Responses
+
+When a request fails, the API returns a JSON error object alongside the appropriate HTTP status code. Every error object includes three fields:
+
+```json
+{
+  "error": "unauthorized",
+  "message": "Invalid or missing API key",
+  "status": 401
+}
+```
+
+| Field     | Type    | Description                                   |
+| --------- | ------- | --------------------------------------------- |
+| `error`   | string  | A short machine-readable error code           |
+| `message` | string  | A human-readable explanation of the error     |
+| `status`  | integer | The HTTP status code, mirrored inside the body |
+
+Common status codes you will encounter:
+
+| Status | Meaning                                                           |
+| ------ | ----------------------------------------------------------------- |
+| `400`  | Bad request — a required parameter is missing or malformed       |
+| `401`  | Unauthorized — your API key is missing or invalid                |
+| `403`  | Forbidden — your key is valid but your plan does not include API access |
+| `404`  | Not found — the requested resource does not exist                |
+| `429`  | Too many requests — you have exceeded your rate limit            |
+| `500`  | Internal server error — something went wrong on TinyTrack's side |
+
+---
+
+## Rate Limiting
+
+Requests are rate-limited **per API key**. When you exceed the limit, the API responds with HTTP `429 Too Many Requests`. Check the `Retry-After` header in the response to learn how many seconds to wait before retrying:
+
+```http
+HTTP/1.1 429 Too Many Requests
+Retry-After: 30
+```
+
+Implement exponential back-off in your integration to handle bursts gracefully and avoid hammering the limit.
+
+---
+
+## Available Endpoints
+
+<CardGroup cols={2}>
+  <Card title="Sites" icon="globe" href="/api-reference/sites">
+    List all websites registered in your account and retrieve individual site details.
+  </Card>
+  <Card title="Stats" icon="chart-line" href="/api-reference/stats">
+    Query aggregated pageviews, unique visitors, and top pages for any site and date range.
+  </Card>
+  <Card title="Events" icon="bolt" href="/api-reference/events">
+    Ingest custom events server-side without loading the browser script.
+  </Card>
+  <Card title="Authentication" icon="key" href="/api-reference/authentication">
+    Generate and manage API keys, and learn how to authenticate every request.
+  </Card>
+</CardGroup>
+
+---
+
+<Info>
+  The API is available on the **Pro plan**. Upgrade at [tinytrack.io/settings/billing](https://tinytrack.io/settings/billing).
+</Info>

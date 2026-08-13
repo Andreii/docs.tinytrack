@@ -1,0 +1,65 @@
+---
+title: "Connect Google Search Console to TinyTrack"
+sidebarTitle: "Search Console"
+description: "Link Google Search Console to your TinyTrack Pro account to see search queries, impressions, and click-through rates alongside your pageview data."
+---
+
+The Search Console integration brings your organic search data directly into TinyTrack so you can see which queries drive traffic to your site — without switching tabs or cross-referencing two separate tools. Once connected, your TinyTrack dashboard shows the exact keywords people searched before landing on your pages, alongside impressions, click-through rates, and average position data, all in one place. This integration is available on the **Pro plan**.
+
+## Requirements
+
+Before connecting Search Console, confirm you have the following:
+
+- A TinyTrack **Pro plan** subscription ($19/mo)
+- Your site verified and active in [Google Search Console](https://search.google.com/search-console)
+- A Google account with permission to access the Search Console property for your site
+
+If you have not yet verified your site with Google, complete that step first. Google offers several verification methods including an HTML tag, a DNS record, and a Google Analytics link.
+
+## Connecting Search Console
+
+<Steps>
+  <Step title="Open your site Settings">
+    Log in to TinyTrack, navigate to the site you want to connect, and click **Settings** in the left sidebar.
+  </Step>
+  <Step title="Open the Integrations panel">
+    In Settings, click **Integrations**, then select **Google Search Console** from the list of available integrations.
+  </Step>
+  <Step title="Start the connection">
+    Click the **Connect** button. TinyTrack opens a Google OAuth prompt in a new window.
+  </Step>
+  <Step title="Sign in with your Google account">
+    Choose the Google account that has access to the Search Console property for your site and grant TinyTrack the read-only permissions it requests. TinyTrack never modifies your Search Console data.
+  </Step>
+  <Step title="Select the matching property">
+    After signing in, TinyTrack displays a list of Search Console properties associated with your Google account. Select the property that matches your site (for example, `https://yoursite.com`).
+  </Step>
+  <Step title="Authorize the connection">
+    Click **Authorize**. TinyTrack confirms the connection and begins fetching your search data. The Search panel appears in your dashboard within a few moments.
+  </Step>
+</Steps>
+
+## What You'll See
+
+Once connected, open the **Search** panel in your TinyTrack dashboard to view:
+
+- **Top queries** — the search terms that generated impressions or clicks for your site
+- **Impressions** — how many times your pages appeared in Google search results for each query
+- **Clicks** — how many searchers clicked through to your site
+- **Average position** — your mean ranking position across all queries
+
+You can sort and filter this table by any column to identify your strongest-performing keywords, spot quick-win opportunities, or track how ranking changes affect your actual traffic.
+
+## Data Freshness
+
+Search Console data typically arrives **2–3 days after the fact**. This delay is a Google platform limitation — TinyTrack fetches the latest available data each day, but cannot accelerate Google's own indexing and reporting pipeline.
+
+For real-time traffic data, use the main dashboard panels. Treat Search Console data as a recent-history view of your organic search performance rather than a live feed.
+
+## Disconnecting Search Console
+
+To remove the integration, go to **Settings → Integrations** and click **Disconnect** next to Google Search Console. TinyTrack immediately stops fetching data and removes the Search panel from your dashboard. Your historical query data is also cleared. You can reconnect at any time by following the setup steps above.
+
+<Info>
+  Search Console integration is available on the Pro plan ($19/mo). [Upgrade your plan](https://tinytrack.io/signin) to unlock this feature.
+</Info>

@@ -1,0 +1,73 @@
+---
+title: "Understanding Events in TinyTrack"
+sidebarTitle: "Events"
+description: "Events are the core unit of measurement in TinyTrack. Learn how pageviews, custom events, payment events, and AI visits are tracked and counted."
+---
+
+In TinyTrack, an **event** is any recorded interaction between a visitor and your site. Every pageview, button click, completed purchase, and AI provider crawl is captured as a single event object with a type, a timestamp, and an optional set of properties. Events are the atomic unit that flows through the pipeline, appears on your dashboard, and counts against your monthly plan limit — so understanding how they work helps you instrument your site accurately and budget your event volume wisely.
+
+## Event types
+
+<CardGroup cols={2}>
+  <Card title="Pageview" icon="file">
+    Fired automatically by the TinyTrack script every time a page loads or a client-side navigation occurs. No extra code required — drop in the script tag and pageviews are tracked immediately.
+  </Card>
+  <Card title="Custom event" icon="cursor-click">
+    Triggered manually through the JavaScript API when you want to track a specific user action — a button click, a form submission, a sign-up, or a purchase confirmation. You name the event and attach any properties that matter to you.
+  </Card>
+  <Card title="Payment event" icon="credit-card">
+    Records a payment transaction and the traffic source that drove it. Use this to connect revenue directly to referrers, UTM campaigns, or custom acquisition channels — without routing financial data through a third-party analytics vendor.
+  </Card>
+  <Card title="AI visit" icon="robot">
+    Detected automatically when a known AI provider (such as a model training crawler or an AI-powered browser agent) visits your page. TinyTrack identifies the provider and logs the visit separately so AI traffic never inflates your human visitor metrics.
+  </Card>
+</CardGroup>
+
+## How events are counted
+
+Every event — regardless of type — counts as **one event** toward your monthly plan total. Pageviews, custom events, payment events, and AI visits all increment the same counter.
+
+<Tip>
+  Each pageview counts as one event toward your monthly plan total.
+</Tip>
+
+Within the dashboard, TinyTrack distinguishes between **total** and **unique** counts:
+
+- **Total** — the raw number of times an event was recorded in the selected time window.
+- **Unique** — the number of de-duplicated visitors who triggered the event at least once in the window, based on TinyTrack's daily-rotating, privacy-preserving visitor IDs.
+
+For example, if the same visitor loads your homepage three times in a day, that contributes **3** to total pageviews and **1** to unique visitors. Both numbers are useful: total gives you engagement depth, unique gives you audience breadth.
+
+### Monthly limits and overages
+
+Your plan's event limit applies to the calendar month. You can monitor your current usage from the **Settings → Billing** page at any time. If you approach your limit, TinyTrack will notify you by email so you can upgrade before any events are dropped.
+
+## Event properties
+
+Every event can carry an optional set of **custom properties** — arbitrary key-value pairs you attach at the point of tracking. Properties let you slice and filter data in the dashboard without needing a separate analytics query.
+
+```javascript
+// Track a sign-up with plan and source properties
+tinytrack("sign_up", {
+  plan: "pro",
+  source: "homepage_cta",
+  trial: true
+});
+```
+
+Property rules to keep in mind:
+
+- Keys must be strings of 64 characters or fewer.
+- Values can be strings, numbers, or booleans.
+- Each event supports up to **10 properties**.
+- Property values are stored as-is — do not pass personally identifiable information such as names, email addresses, or user IDs.
+
+Once you start sending a property, it appears as a filterable dimension in the dashboard within a few seconds.
+
+## Real-time vs. historical data
+
+TinyTrack processes events as they arrive — there is no batch window, no sampling, and no 24-hour delay. When a visitor hits a page or triggers a custom event, it appears in your dashboard almost instantly.
+
+The same event is also written to your historical record, so switching from the **Live** view to a 30-day chart shows the same numbers — real-time and historical data come from a single source of truth, not two separate pipelines.
+
+Use the date-range selector in the dashboard to move between real-time and historical views without losing context.

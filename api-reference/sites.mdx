@@ -1,0 +1,112 @@
+---
+title: "Sites API: List and Manage Your Tracked Sites"
+sidebarTitle: "Sites"
+description: "GET /v1/sites returns the list of websites registered in your TinyTrack account, including domain, creation date, and tracking status."
+---
+
+The Sites endpoint lets you programmatically list every website you have registered in your TinyTrack account and retrieve detailed information about individual sites. Use the `id` values returned here as the `site_id` parameter in the [Stats](/api-reference/stats) and [Events](/api-reference/events) endpoints.
+
+---
+
+## List Sites
+
+Retrieve all sites associated with your account.
+
+**`GET /v1/sites`**
+
+No query parameters are required for this endpoint.
+
+### Example Request
+
+```bash cURL
+curl https://api.tinytrack.io/v1/sites \
+  -H "Authorization: Bearer tt_live_xxxxxxxxxxxx"
+```
+
+### Example Response
+
+```json
+{
+  "data": [
+    {
+      "id": "site_abc123",
+      "domain": "blog.acme.dev",
+      "created_at": "2024-01-15T10:00:00Z",
+      "tracking_active": true
+    }
+  ],
+  "meta": { "total": 1 }
+}
+```
+
+### Response Fields
+
+<ResponseField name="id" type="string" required>
+  The unique identifier for the site. Use this value as the `site_id` parameter in Stats and Events requests.
+</ResponseField>
+
+<ResponseField name="domain" type="string" required>
+  The registered domain for the site (e.g. `blog.acme.dev`). This matches the `data-site` attribute in your tracking snippet.
+</ResponseField>
+
+<ResponseField name="created_at" type="string" required>
+  The date and time the site was added to your TinyTrack account, formatted as an [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) UTC timestamp (e.g. `2024-01-15T10:00:00Z`).
+</ResponseField>
+
+<ResponseField name="tracking_active" type="boolean" required>
+  Whether the TinyTrack snippet is actively receiving events for this site. `true` means data is flowing; `false` means no events have been received recently or tracking has been paused.
+</ResponseField>
+
+---
+
+## Get a Single Site
+
+Retrieve the details for one specific site by its ID.
+
+**`GET /v1/sites/{site_id}`**
+
+### Path Parameters
+
+<ParamField path="site_id" type="string" required>
+  The unique ID of the site to retrieve. Obtain this value from the [List Sites](#list-sites) endpoint.
+</ParamField>
+
+### Example Request
+
+```bash cURL
+curl https://api.tinytrack.io/v1/sites/site_abc123 \
+  -H "Authorization: Bearer tt_live_xxxxxxxxxxxx"
+```
+
+### Example Response
+
+```json
+{
+  "data": {
+    "id": "site_abc123",
+    "domain": "blog.acme.dev",
+    "created_at": "2024-01-15T10:00:00Z",
+    "tracking_active": true
+  }
+}
+```
+
+The response returns the same site object as described in the [List Sites response fields](#response-fields) above. If no site with the given `site_id` exists in your account, the API returns HTTP `404`:
+
+```json
+{
+  "error": "not_found",
+  "message": "No site found with ID site_abc123",
+  "status": 404
+}
+```
+
+---
+
+## Managing Sites in the Dashboard
+
+You can add, rename, and delete sites from the **Sites** section of your TinyTrack dashboard at [tinytrack.io](https://tinytrack.io). The API is read-only for sites — create and remove sites through the UI, then reference them here by their `id`.
+
+<Info>
+  Each site you add receives a unique `id` that never changes, even if you update the domain. Always use the `id` (not the domain string) to reference sites in API calls.
+</Info>

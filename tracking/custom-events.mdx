@@ -1,0 +1,96 @@
+---
+title: "Track Custom Events and User Interactions"
+sidebarTitle: "Custom Events"
+description: "Use TinyTrack's JavaScript API to track button clicks, form submissions, sign-ups, purchases, and any other user interaction beyond pageviews."
+---
+
+Once the TinyTrack script is installed and loaded, you gain access to the `tinytrack()` global function. Call it anywhere in your JavaScript to record any user interaction you care about — button clicks, form submissions, sign-ups, purchases, video plays, or any other meaningful action. Custom events give you a complete picture of what visitors actually *do* on your site, not just which pages they visit.
+
+<Note>
+  The script must be loaded before you call `tinytrack()`. The `defer` attribute ensures this on standard page loads. For dynamically injected scripts, wait for the `load` event before calling the function.
+</Note>
+
+## Basic Event Syntax
+
+Call `tinytrack()` with the string `'event'` as the first argument and your event name as the second:
+
+```js
+tinytrack('event', 'button-click');
+```
+
+That's all it takes. TinyTrack records the event name, the current page URL, the visitor's daily ID, and the timestamp — then the event appears in your dashboard immediately.
+
+## Events with Properties
+
+Pass an optional properties object as a third argument to attach structured metadata to your event:
+
+```js
+tinytrack('event', 'signup', {
+  plan: 'pro',
+  source: 'homepage-cta'
+});
+```
+
+Properties let you slice and filter events in the dashboard. You can pass any key-value pairs you need — TinyTrack accepts strings, numbers, and booleans. Keep property names short and consistent across events for the cleanest reporting.
+
+<Tip>
+  Custom events count toward your monthly event total just like pageviews.
+</Tip>
+
+## Common Use Cases
+
+<CodeGroup>
+
+```js Sign-up Button Click
+// Attach to your sign-up button's click handler
+document.getElementById('signup-btn').addEventListener('click', () => {
+  tinytrack('event', 'signup-click', {
+    plan: 'starter',
+    source: 'pricing-page'
+  })
+})
+```
+
+```js Purchase Completion
+// Fire on your order confirmation page after a successful payment
+tinytrack('event', 'purchase', {
+  amount: 1900,       // in cents — $19.00
+  currency: 'usd',
+  plan: 'pro',
+  source: 'google-ads'
+})
+```
+
+```js Form Submission
+// Fire when a contact or lead form is successfully submitted
+document.getElementById('contact-form').addEventListener('submit', (e) => {
+  e.preventDefault()
+  // ... your form submission logic ...
+
+  tinytrack('event', 'form-submit', {
+    form: 'contact',
+    page: window.location.pathname
+  })
+})
+```
+
+</CodeGroup>
+
+## Viewing Custom Events in the Dashboard
+
+After firing a custom event, it appears in your TinyTrack dashboard under the **Goals & Events** section. Here is what you can do there:
+
+- **Filter by event name** — click any event name in the list to scope the entire dashboard to visitors who triggered that event.
+- **View event counts over time** — the trend chart updates to show event frequency across your selected date range.
+- **See property breakdowns** — if you pass properties, TinyTrack groups and counts events by each property value so you can compare segments (e.g. `plan: pro` vs `plan: starter`).
+- **Build funnels** — combine multiple events into a funnel to see conversion rates between steps, such as from `signup-click` → `signup` → `purchase`.
+
+## Event Naming Conventions
+
+Consistent naming makes your dashboard far easier to read and your funnels easier to build. Follow these conventions:
+
+- **Use lowercase kebab-case** — `signup-click`, `form-submit`, `plan-upgrade`. Avoid camelCase, PascalCase, or spaces.
+- **Be descriptive but concise** — `video-play` is better than `v` and more readable than `user-clicked-the-video-play-button`.
+- **Use a noun-verb or noun-action pattern** — `trial-start`, `payment-complete`, `invite-sent`.
+- **Keep property keys consistent** — if you use `source` on one event, use `source` (not `channel` or `utm_source`) across all events to make cross-event filtering work reliably.
+- **Avoid PII in event names or properties** — never pass email addresses, user IDs, or any personally identifiable information as a property value.

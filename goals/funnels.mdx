@@ -1,0 +1,101 @@
+---
+title: "Analyze Drop-Off with Conversion Funnels"
+sidebarTitle: "Funnels"
+description: "Funnels in TinyTrack show you how many visitors complete each step of a multi-step flow — revealing exactly where users drop off before converting."
+---
+
+A single conversion goal tells you how many people made it to the finish line. A funnel tells you where everyone else went. By mapping out each step of a multi-step flow — landing page to pricing page to sign-up form to confirmation — you can see exactly how many visitors moved from one step to the next and pinpoint the single step where most of them leave. That's where your highest-leverage optimisation work lives.
+
+## How funnels work
+
+A funnel in TinyTrack is an ordered sequence of steps. Each step is either a **page path** (a URL that the visitor must land on) or a **custom event** (a `tinytrack('event', ...)` call that your site fires). TinyTrack counts how many unique visitor sessions reached each step **in order** within the same session, and displays the drop-off between every consecutive pair of steps.
+
+Key behaviours to understand before you build a funnel:
+
+- **Order is strict.** A visitor must pass through step 1 before step 2 is counted. Visiting the steps out of order does not register a conversion for that step.
+- **Session-scoped.** Steps must occur within the same browser session. A visitor who completes step 1 today and step 2 tomorrow is not counted as having progressed.
+- **No time limit within a session.** As long as the visitor doesn't close the tab or let the session expire, they can take as long as they like between steps.
+- **Unique visitors only.** Each visitor is counted once per step regardless of how many times they trigger it in a single session.
+
+<Info>
+  Funnel data is calculated from the moment you create the funnel. Historical data prior to creation is not backfilled.
+</Info>
+
+## Creating a funnel
+
+<Steps>
+  <Step title="Open Goals in your dashboard">
+    Log in to [TinyTrack](https://tinytrack.io/signin), select your site, and click **Goals** in the left navigation. Both goals and funnels are managed from this screen.
+  </Step>
+  <Step title="Click Create funnel">
+    Click the **Create funnel** button in the top-right corner of the Goals screen. The funnel builder opens with an empty step list.
+  </Step>
+  <Step title="Add steps in order">
+    Add each step of your flow from first to last. For every step, choose a type and enter a value:
+
+    - **Page path** — enter the URL path visitors must reach, for example `/pricing`.
+    - **Custom event** — enter the event name your site fires, for example `add_to_cart`.
+
+    Click **Add step** to append additional steps. Drag and drop steps to reorder them if you need to adjust the sequence.
+
+    ```js
+    // Example events to fire at key points in a checkout flow
+    tinytrack('event', 'view_cart');      // Step 2 (if step 1 is a page path)
+    tinytrack('event', 'begin_checkout'); // Step 3
+    tinytrack('event', 'purchase');       // Step 4
+    ```
+
+    You need a minimum of two steps to save a funnel. There is no upper limit on the number of steps.
+  </Step>
+  <Step title="Name the funnel">
+    Enter a descriptive name in the **Funnel name** field, for example **Checkout flow** or **Onboarding sequence**. The name appears as the funnel's heading in the Goals screen and in any shared dashboards.
+  </Step>
+  <Step title="Save">
+    Click **Save funnel**. TinyTrack begins collecting step-by-step data immediately. The funnel appears under the **Funnels** section of your Goals screen.
+  </Step>
+</Steps>
+
+## Example funnel
+
+The table below shows what a four-step e-commerce checkout funnel might look like after two weeks of data collection.
+
+| Step | Path / Event | Visitors | Drop-off |
+|------|-------------|----------|----------|
+| 1 | `/` (Homepage) | 12,400 | — |
+| 2 | `/pricing` | 3,720 | 70.0% |
+| 3 | `/signup` | 1,488 | 60.0% |
+| 4 | `/signup/confirmed` | 892 | 40.0% |
+
+In this example, the sharpest single drop-off happens between the homepage and the pricing page — 70 % of visitors who land on the homepage never view pricing at all. That's the step worth investigating first. Is the pricing call-to-action visible? Is the page loading slowly? Is the pricing plan unclear?
+
+The drop from `/pricing` to `/signup` (60 %) is the next largest. If that rate is higher than your industry benchmark, consider A/B testing your pricing page copy or simplifying the plan options.
+
+## Interpreting funnel data
+
+When you open a funnel's detail view, TinyTrack renders a visual bar chart with one bar per step, each bar scaled to the visitor count for that step. Use the following approach to act on what you see:
+
+**Find your biggest drop-off.** The step with the largest percentage decrease from the previous step is your highest-priority optimisation target. Even a small improvement at a high-traffic step compounds across every step that follows.
+
+**Compare time periods.** Use the date range picker to compare this week's funnel against last week's. A sudden increase in drop-off at a specific step often signals a broken page, a broken event, or a recent change that hurt the user experience.
+
+**Segment by source.** Apply a traffic-source filter to see whether visitors from one acquisition channel convert through your funnel at a higher rate than others. If organic search visitors progress further than paid visitors, your landing page may be misaligned with your ad copy.
+
+**Cross-reference with page analytics.** Click through to the individual page in your TinyTrack dashboard to see the bounce rate and average time on page for any step where visitors are dropping off. Combining funnel drop-off with page-level metrics gives you enough context to form a hypothesis and run a test.
+
+<Note>
+  If a step shows **0 visitors** even though you know traffic is reaching that page or event, check that the URL path matches exactly (including any trailing slash) and that the event name in your funnel matches the string you pass to `tinytrack('event', ...)` character-for-character.
+</Note>
+
+## Funnel vs. goal
+
+Goals and funnels are complementary tools. Use this table to decide which one to reach for:
+
+| | Goal | Funnel |
+|---|---|---|
+| **Measures** | A single completed action | A multi-step journey toward conversion |
+| **Best for** | Tracking overall conversion rate | Identifying where users drop off |
+| **Steps** | One trigger (page or event) | Two or more ordered triggers |
+| **Output** | Conversion count + conversion rate | Per-step visitor counts + drop-off % |
+| **Backfilled?** | No — counts from creation | No — counts from creation |
+
+The most effective setup is to use a **funnel** to map your full conversion journey and a matching **goal** on the final step to track your headline conversion rate. That way, the Goals overview gives you a quick top-line number while the funnel shows you exactly where to focus your optimisation effort.

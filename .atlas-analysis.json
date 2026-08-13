@@ -1,23 +1,11 @@
 {
-  "$schema": "https://mintlify.com/docs.json",
-  "name": "TinyTrack",
+  "projectType": "saas",
+  "projectName": "TinyTrack",
+  "projectDescription": "TinyTrack is a privacy-first, cookie-free web analytics platform that delivers real-time pageviews, visitor counts, goal tracking, and shareable dashboards via a 1 KB script.",
   "theme": "almond",
-  "colors": {
-    "primary": "#f6462c",
-    "light": "#fa9434"
-  },
-  "logo": {
-    "light": "https://media.brand.dev/853a898d-00b3-4f14-bd3a-a19b67bfe8b7.svg",
-    "dark": "https://media.brand.dev/e38fd1a9-5e2d-4590-98e9-3018aa7c80ee.svg"
-  },
-  "favicon": "/favicon.svg",
-  "navbar": {
-    "primary": {
-      "type": "button",
-      "label": "Start for free",
-      "href": "https://tinytrack.io/signup"
-    }
-  },
+  "primaryColor": "#f6462c",
+  "lightColor": "#fa9434",
+  "darkColor": null,
   "navigation": {
     "tabs": [
       {
@@ -95,5 +83,24 @@
         ]
       }
     ]
-  }
+  },
+  "keyFeatures": [
+    "Real-time pageviews and visitor counts",
+    "Cookie-free, GDPR/CCPA/PECR-compliant analytics",
+    "1 KB async tracking script",
+    "Automatic bot traffic filtering",
+    "Goals and funnel tracking",
+    "Shareable public dashboards",
+    "Payment event tracking",
+    "AI traffic detection",
+    "Search Console integration",
+    "API access (Pro plan)"
+  ],
+  "publicApiSurface": [
+    "GET /api/sites — list tracked sites",
+    "GET /api/stats — retrieve aggregated analytics stats",
+    "POST /api/events — ingest custom events",
+    "Script tag: <script defer data-site=\"...\" src=\"https://cdn.tinytrack.io/t.js\"></script>",
+    "tinytrack('event', 'name', { props }) — custom event JS API"
+  ]
 }

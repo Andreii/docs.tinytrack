@@ -1,0 +1,191 @@
+---
+title: "Events API: Ingest Custom Events Server-Side"
+sidebarTitle: "Events"
+description: "POST /v1/events lets you send custom events to TinyTrack from your backend or any server-side environment without loading the browser script."
+---
+
+Use the Events endpoint to track conversions and actions that happen on your server — payment confirmations, email opens, webhook callbacks, and any other event that occurs outside the browser — and surface them alongside your pageview data in the TinyTrack dashboard. Because you're calling the API directly from your backend, there's no need to load the TinyTrack browser script for these events.
+
+---
+
+## Send an Event
+
+Record a custom event for a tracked site.
+
+**`POST /v1/events`**
+
+### Request Body Parameters
+
+<ParamField body="site_id" type="string" required>
+  The unique ID of the site to associate this event with. Obtain this from [GET /v1/sites](/api-reference/sites).
+</ParamField>
+
+<ParamField body="name" type="string" required>
+  The name of the event (e.g. `payment`, `signup`, `trial_started`). Use short, descriptive, lowercase names with underscores. This name appears exactly as you provide it in your TinyTrack Goals & Funnels dashboard.
+</ParamField>
+
+<ParamField body="url" type="string" required>
+  The full URL where the event occurred (e.g. `https://blog.acme.dev/checkout/confirm`). Include the protocol and domain — TinyTrack uses this to attribute the event to the correct page in your dashboard.
+</ParamField>
+
+<ParamField body="props" type="object">
+  An optional object of custom key-value pairs to attach to the event. Both keys and values must be strings or numbers. Use `props` to capture metadata like payment amounts, plan names, or referral codes. Example:
+
+  ```json
+  { "amount": 2900, "currency": "usd", "plan": "pro" }
+  ```
+
+  Avoid including personally identifiable information (names, email addresses, IP addresses) in `props` — this preserves TinyTrack's privacy guarantees for your users.
+</ParamField>
+
+### Example Request
+
+<CodeGroup>
+  ```bash cURL
+  curl -X POST https://api.tinytrack.io/v1/events \
+    -H "Authorization: Bearer tt_live_xxxxxxxxxxxx" \
+    -H "Content-Type: application/json" \
+    -d '{
+      "site_id": "site_abc123",
+      "name": "payment",
+      "url": "https://blog.acme.dev/checkout/confirm",
+      "props": { "amount": 2900, "currency": "usd" }
+    }'
+  ```
+
+  ```js JavaScript (Node.js)
+  const res = await fetch('https://api.tinytrack.io/v1/events', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${process.env.TINYTRACK_API_KEY}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      site_id: 'site_abc123',
+      name: 'payment',
+      url: 'https://blog.acme.dev/checkout/confirm',
+      props: { amount: 2900, currency: 'usd' }
+    })
+  });
+
+  const data = await res.json();
+  // { accepted: true }
+  ```
+
+  ```python Python
+  import os, requests
+
+  response = requests.post(
+      "https://api.tinytrack.io/v1/events",
+      headers={
+          "Authorization": f"Bearer {os.environ['TINYTRACK_API_KEY']}",
+          "Content-Type": "application/json",
+      },
+      json={
+          "site_id": "site_abc123",
+          "name": "payment",
+          "url": "https://blog.acme.dev/checkout/confirm",
+          "props": {"amount": 2900, "currency": "usd"},
+      },
+  )
+
+  print(response.json())  # {'accepted': True}
+  ```
+</CodeGroup>
+
+### Example Successful Response (HTTP 202)
+
+```json
+{ "accepted": true }
+```
+
+The API responds with HTTP `202 Accepted` rather than `200 OK` because the event is queued for asynchronous processing. `{ "accepted": true }` means the event has been received and will appear in your dashboard within a few seconds.
+
+---
+
+## Server-Side vs. Browser-Side Events
+
+TinyTrack supports two complementary ways to track events:
+
+| Method | Best for | How it works |
+| --- | --- | --- |
+| **Server-side** (`POST /v1/events`) | Payment webhooks, email opens, backend workflows, Stripe/Paddle callbacks | You call the API directly from your server with your API key |
+| **Browser-side** (`t.js` script) | Button clicks, form submissions, page interactions, user-initiated flows | The lightweight 1 KB script fires events from the visitor's browser |
+
+Use **server-side events** when:
+- The action happens on your server and there is no user browser session in play (e.g. a Stripe `payment_intent.succeeded` webhook).
+- You want to guarantee the event is captured regardless of ad blockers or browser settings.
+- You are tracking automated or system-level processes (e.g. a nightly email digest being sent).
+
+Use **browser-side events** when:
+- You need to capture user interactions in real time (e.g. a "Get Started" button click or a checkout step).
+- The event is tied to a specific page and user action that the browser script can observe naturally.
+
+You can mix both approaches freely within the same site — they appear together in your TinyTrack Goals & Funnels view.
+
+<Note>
+  Server-side events do not automatically include the visitor's IP address or user-agent, so they appear with **no location data** in your dashboard. If location attribution matters for a specific event, fire it from the browser using the `t.js` script instead.
+</Note>
+
+---
+
+## Common Use Cases
+
+<AccordionGroup>
+  <Accordion title="Stripe payment webhook">
+    Call `POST /v1/events` inside your Stripe webhook handler after verifying the signature. Pass the payment amount and currency in `props` so you can filter payments by value in the dashboard.
+
+    ```js JavaScript (Node.js / Express)
+    app.post('/webhooks/stripe', express.raw({ type: 'application/json' }), async (req, res) => {
+      const sig = req.headers['stripe-signature'];
+      const event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
+
+      if (event.type === 'payment_intent.succeeded') {
+        const { amount, currency } = event.data.object;
+
+        await fetch('https://api.tinytrack.io/v1/events', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${process.env.TINYTRACK_API_KEY}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            site_id: process.env.TINYTRACK_SITE_ID,
+            name: 'payment',
+            url: 'https://blog.acme.dev/checkout/confirm',
+            props: { amount, currency }
+          })
+        });
+      }
+
+      res.sendStatus(200);
+    });
+    ```
+  </Accordion>
+
+  <Accordion title="New user signup">
+    Fire a `signup` event from your registration endpoint after creating the user record:
+
+    ```python Python (Flask)
+    @app.route('/register', methods=['POST'])
+    def register():
+        user = create_user(request.json)
+
+        requests.post(
+            'https://api.tinytrack.io/v1/events',
+            headers={
+                'Authorization': f"Bearer {os.environ['TINYTRACK_API_KEY']}",
+                'Content-Type': 'application/json',
+            },
+            json={
+                'site_id': os.environ['TINYTRACK_SITE_ID'],
+                'name': 'signup',
+                'url': 'https://blog.acme.dev/register',
+                'props': {'plan': request.json.get('plan', 'starter')},
+            },
+        )
+
+        return jsonify({'user_id': str(user.id)}), 201
+    ```
+  </Accordion>
+</AccordionGroup>

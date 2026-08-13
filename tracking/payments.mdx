@@ -1,0 +1,91 @@
+---
+title: "Track Payment Events and Revenue Sources"
+sidebarTitle: "Payments"
+description: "TinyTrack lets you record payment events to see when purchases happen and which traffic source drove each transaction — no backend required."
+---
+
+Knowing which marketing channels drive traffic is useful. Knowing which ones actually drive *revenue* is what moves your business forward. TinyTrack payment tracking lets you record a `payment` event at the moment a purchase is confirmed — so you can see, in the same dashboard where you track pageviews and sign-ups, exactly which source, campaign, or page is responsible for each transaction.
+
+## Recording a Payment Event
+
+Call `tinytrack()` with the event name `'payment'` and a properties object that describes the transaction. Fire this on your order confirmation page after a successful payment:
+
+```js
+tinytrack('event', 'payment', {
+  amount: 2900,      // in cents — $29.00
+  currency: 'usd',
+  source: 'google-ads'
+});
+```
+
+TinyTrack ties this event to the visitor's session, so the attribution chain — from first touch (referrer, UTM source) through to payment — is preserved automatically.
+
+<Tip>
+  Fire payment events on your order confirmation page for the most reliable attribution.
+</Tip>
+
+## Recommended Properties for Payment Events
+
+Use these standard property names to get the most out of TinyTrack's Payments view. Consistent naming across all your payment events enables clean filtering and accurate revenue aggregation.
+
+| Property | Type | Description | Example |
+|---|---|---|---|
+| `amount` | Number | Transaction value in the smallest currency unit (cents for USD/EUR, pence for GBP) | `2900` for $29.00 |
+| `currency` | String | ISO 4217 currency code, lowercase | `'usd'`, `'eur'`, `'gbp'` |
+| `source` | String | The marketing channel or campaign that brought the buyer | `'google-ads'`, `'organic'`, `'email-campaign'` |
+| `plan` | String | The product or plan purchased | `'pro'`, `'starter'`, `'enterprise-annual'` |
+
+You can add any additional properties your business needs — TinyTrack accepts any key-value pairs alongside these recommended ones.
+
+## When to Fire the Payment Event
+
+The right moment to fire the payment event depends on your checkout architecture:
+
+<Tabs>
+  <Tab title="Confirmation Page">
+    Fire the event when your order confirmation or "thank you" page loads. This is the simplest approach and works for most storefronts and SaaS checkouts.
+
+    ```js
+    // On your /order-confirmation or /thank-you page
+    window.addEventListener('load', () => {
+      tinytrack('event', 'payment', {
+        amount: 4900,
+        currency: 'usd',
+        plan: 'pro',
+        source: document.referrer || 'direct'
+      })
+    })
+    ```
+  </Tab>
+  <Tab title="After Webhook Callback">
+    If your payment processor (Stripe, Paddle, Lemon Squeezy) sends a webhook to your backend before the user reaches the confirmation page, trigger a frontend event after your backend confirms success — for example, by passing a `?payment=success` query parameter and reading it on page load.
+
+    ```js
+    // Read a success flag set by your backend after webhook validation
+    const params = new URLSearchParams(window.location.search)
+
+    if (params.get('payment') === 'success') {
+      tinytrack('event', 'payment', {
+        amount: parseInt(params.get('amount') || '0', 10),
+        currency: params.get('currency') || 'usd',
+        plan: params.get('plan') || 'unknown',
+        source: params.get('source') || 'direct'
+      })
+    }
+    ```
+  </Tab>
+</Tabs>
+
+Avoid firing payment events on the checkout *initiation* page — wait for confirmed success so your revenue numbers reflect completed transactions, not abandoned carts.
+
+## Viewing Payment Data in the Dashboard
+
+Navigate to the **Payments** section of your TinyTrack dashboard to see:
+
+- **Payment event count** — the total number of payment events recorded in the selected date range, shown as a time-series chart.
+- **Revenue total** — if you pass `amount` and `currency`, TinyTrack aggregates total revenue and displays it alongside the event count.
+- **Breakdown by source** — see which traffic sources (organic, paid search, social, email, direct) are driving the most transactions.
+- **Breakdown by plan** — if you pass a `plan` property, TinyTrack groups payments by plan name so you can see which tier is most popular.
+- **Conversion path** — combine the Payments view with the Goals & Funnels section to trace the full visitor journey from first pageview to completed purchase.
+
+All payment data updates in real time and is filterable by any date range using the dashboard date picker.
