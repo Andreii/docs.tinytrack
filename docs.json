@@ -1,10 +1,10 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "name": "TinyTrack",
-  "theme": "almond",
+  "theme": "maple",
   "colors": {
-    "primary": "#f6462c",
-    "light": "#fa9434"
+    "primary": "#3B82F6",
+    "light": "#3B82F6"
   },
   "logo": {
     "light": "https://media.brand.dev/853a898d-00b3-4f14-bd3a-a19b67bfe8b7.svg",
