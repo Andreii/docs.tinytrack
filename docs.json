@@ -11,7 +11,10 @@
     "dark": "https://media.brand.dev/e38fd1a9-5e2d-4590-98e9-3018aa7c80ee.svg",
     "href": "https://tinytrack.io"
   },
-  "favicon": "/favicon.svg",
+  "favicon": {
+    "light": "/images/favicon.svg",
+    "dark": "/images/favicon.svg"
+  },
   "navbar": {
     "primary": {
       "type": "button",
