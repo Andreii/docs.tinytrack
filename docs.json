@@ -1,6 +1,6 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "name": "TinyTrack",
+  "name": "tinytrack",
   "theme": "maple",
   "colors": {
     "primary": "#3B82F6",
@@ -8,7 +8,8 @@
   },
   "logo": {
     "light": "https://media.brand.dev/853a898d-00b3-4f14-bd3a-a19b67bfe8b7.svg",
-    "dark": "https://media.brand.dev/e38fd1a9-5e2d-4590-98e9-3018aa7c80ee.svg"
+    "dark": "https://media.brand.dev/e38fd1a9-5e2d-4590-98e9-3018aa7c80ee.svg",
+    "href": "https://tinytrack.io"
   },
   "favicon": "/favicon.svg",
   "navbar": {
@@ -95,5 +96,8 @@
         ]
       }
     ]
+  },
+  "fonts": {
+    "family": "Inter"
   }
 }
