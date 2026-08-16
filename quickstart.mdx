@@ -4,10 +4,12 @@ sidebarTitle: "Quickstart"
 description: "Learn how to install TinyTrack on your website and start seeing real-time analytics in under five minutes — no credit card required."
 ---
 
-By the end of this guide you'll have the TinyTrack tracking script installed on your website, your dashboard showing live visitor data, and an optional goal configured to measure your most important conversion event. The whole process takes under five minutes and requires no backend changes or credit card.
+Tinytrack offers a 14 day trial with no credit card requirement. Use it, understand how it works and see for yourself if it is a good fit for you. The dashboard comes packed with features, but before jumping into that, please follow the steps below to register a new account and add your website.
 
 <Note>
-  TinyTrack sets no cookies and requires no consent banner. You're compliant with GDPR, CCPA, and PECR the moment you install the script.
+  **Prerequisites**
+
+  You need to have access to the source code of your website. This is needed to install the script that will perform the tracking.
 </Note>
 
 ## Steps
@@ -16,49 +18,30 @@ By the end of this guide you'll have the TinyTrack tracking script installed on 
   <Step title="Sign up for a free trial">
     Go to [tinytrack.io/signup](https://tinytrack.io/signup) and create your account. Choose one of two options:
 
-    - **Sign up with Google** — click the Google OAuth button for one-click account creation.
-    - **Email and password** — enter your email address and choose a password, then click **Sign up**.
+    - **Sign up with Google**  or **Email and password**
 
-    Your 14-day free trial starts immediately. No credit card is required at this stage.
+    Please check the spam folder in case the email does not land in your inbox.
   </Step>
-
   <Step title="Add your site">
-    After signing in, click **Add site** in the dashboard. Enter the domain you want to track — for example:
+    After signing in, follow the onboarding steps. You will be asked to add you website domain:
 
-    ```
-    blog.acme.dev
+    ```text
+    example.com
     ```
 
-    TinyTrack accepts bare domains and subdomains. Do not include `https://` or a trailing slash. Click **Save** to generate your unique tracking snippet.
+    tinytrack accepts bare domains and subdomains.
   </Step>
-
   <Step title="Install the tracking script">
-    Copy the snippet TinyTrack provides and paste it inside the `<head>` element of every page you want to track. Replace `YOUR_SITE` with the domain you entered in the previous step.
+    You will be provided with a snippet that you must paste inside your `<head>`of the site you want to track.
 
-    ```html
-    <!-- Add inside <head> -->
-    <script defer data-site="YOUR_SITE" src="https://cdn.tinytrack.io/t.js"></script>
-    ```
+    <Frame>
+      ![Screenshot 2026 08 16 At 20 41 41](/images/Screenshot-2026-08-16-at-20.41.41.png "Screenshot 2026 08 16 At 20 41 41")
+    </Frame>
 
-    **Platform-specific tips:**
-    - **Next.js / React** — add the tag to your root `_document.js`, `layout.tsx`, or equivalent layout file so it loads on every route.
-    - **WordPress** — paste it into your theme's `header.php` file, just before the closing `</head>` tag, or use a header/footer plugin.
     - **Static sites** — add it directly to your HTML template's `<head>` section.
-
-    The script is asynchronous (`defer`) and only 1 KB, so it won't block page rendering or affect your performance scores.
   </Step>
-
   <Step title="Verify tracking is working">
-    Open your TinyTrack dashboard, then open your website in a separate browser tab and navigate to any page. Watch the **Live visitors** counter in the dashboard — you should see it tick up within a few seconds confirming the script is firing correctly.
-
-    If the counter doesn't update after 30 seconds, double-check that:
-    - The `data-site` attribute matches the domain you entered exactly.
-    - The script tag is inside `<head>`, not just before `</body>`.
-    - Your browser isn't blocking third-party scripts (try an incognito window without extensions).
-  </Step>
-
-  <Step title="Set up a goal (optional)">
-    Goals let you measure specific conversions — sign-ups, purchases, button clicks, or any custom event. Once basic tracking is confirmed, follow the [Goals overview](/goals/goals-overview) guide to configure your first conversion goal and start tracking what matters most to your product.
+    Open the dashboard, then open your website in a separate browser tab and navigate to any page. You can already see **Live visitors** counter in the dashboard.
   </Step>
 </Steps>
 
@@ -68,9 +51,11 @@ By the end of this guide you'll have the TinyTrack tracking script installed on 
   <Card title="Custom Events" icon="code" href="/tracking/custom-events">
     Fire custom events from your JavaScript to track button clicks, form submissions, and any other user interaction beyond pageviews.
   </Card>
+
   <Card title="Goals & Funnels" icon="flag-checkered" href="/goals/goals-overview">
     Define conversion goals and build multi-step funnels to see exactly where visitors drop off before completing an action.
   </Card>
+
   <Card title="Shareable Dashboards" icon="share-nodes" href="/sharing/shareable-dashboards">
     Generate a public read-only dashboard link to share live analytics with your team, investors, or clients.
   </Card>
